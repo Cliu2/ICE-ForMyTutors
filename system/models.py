@@ -24,7 +24,7 @@ class Course(models.Model):
 	instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
 	title = models.CharField(max_length=200)
 	description = models.TextField()
-	CECU = models.IntegerFieled()
+	CECU = models.IntegerField()
 	category = models.CharField(max_length=100)
 	status = models.BooleanField(default=False)
 
@@ -32,8 +32,8 @@ class Module(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
 class Quiz(models.Model):
-	course = models.ForeignKey(Course. on_delete=models.CASCADE)
-	pass_score = models.IntegerFieled()
+	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	pass_score = models.IntegerField()
 
 class Question(models.Model):
 	description = models.TextField()
@@ -55,5 +55,5 @@ class Component_in_Module(models.Model):
 	pass
 
 class Question_in_Quiz(models.Model):
-	quiz = models.ForeignKey(Quiz)
+	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
