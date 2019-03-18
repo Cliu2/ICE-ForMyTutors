@@ -10,4 +10,4 @@ class Instructor(models.Model):
 	email=models.EmailField()
 	autobiagraphy=models.TextField()
 	def __str__(self):
-		return f'{self.name} {self.lastname} ({self.autobiagraphy})'
+		return f'{self.firstname} {self.lastname} ({self.autobiagraphy})'
