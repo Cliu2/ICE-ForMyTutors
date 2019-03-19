@@ -2,10 +2,11 @@ from django.db import models
 
 class Instructor(models.Model):
 
-	firstname=models.CharField(max_length=200)
-	lastname=models.CharField(max_length=200)
-	username=models.CharField(max_length=200)
-	encodedPW=models.CharField(max_length=200)
+	fname=models.CharField(max_length=200)
+	lname=models.CharField(max_length=200)
+	uname=models.CharField(max_length=200)
+	pwd=models.CharField(max_length=200)
+	email = models.EmailField()
 
 	#pwd will be handled by Django, so not included
 	autobiagraphy=models.TextField()
@@ -19,6 +20,8 @@ class Learner(models.Model):
 	pwd = models.CharField(max_length=16)
 	fname = models.CharField(max_length=200)
 	lname = models.CharField(max_length=200)
+	def __str__(self):
+		return f'{self.staffID}: {self.fname} {self.lname}'
 
 class Course(models.Model):
 	instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
@@ -47,9 +50,10 @@ class Question(models.Model):
 """
 	???
 """
-class Take(models.Model):
+class Enroll(models.Model):
 	learner = models.ForeignKey(Course, on_delete=models.CASCADE)
 	course = models.ForeignKey(Learner, on_delete=models.CASCADE)
+	status = models.BooleanField()
 
 class Component_in_Module(models.Model):
 	pass
