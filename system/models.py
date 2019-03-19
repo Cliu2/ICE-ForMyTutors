@@ -5,7 +5,7 @@ class Instructor(models.Model):
 	firstname=models.CharField(max_length=200)
 	lastname=models.CharField(max_length=200)
 	username=models.CharField(max_length=200)
-	encodedPW=models.CharField(max_length=200)
+	# encodedPW=models.CharField(max_length=200)
 
 	#pwd will be handled by Django, so not included
 	autobiagraphy=models.TextField()
@@ -14,11 +14,11 @@ class Instructor(models.Model):
 
 class Learner(models.Model):
 	staffID = models.CharField(max_length=8)
-	uname = models.CharField(max_length=200)
+	username = models.CharField(max_length=200)
 	email = models.EmailField()
-	pwd = models.CharField(max_length=16)
-	fname = models.CharField(max_length=200)
-	lname = models.CharField(max_length=200)
+	# pwd = models.CharField(max_length=16)
+	firstname = models.CharField(max_length=200)
+	lastname = models.CharField(max_length=200)
 
 class Course(models.Model):
 	instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
@@ -30,9 +30,24 @@ class Course(models.Model):
 
 class Module(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	order=models.IntegerField()
+	title=models.CharField(max_length=200)
+
+class Componenet(models.Model):
+	order=models.IntegerField()
+	title=models.CharField(max_length=200)
+	course=models.ForeignKey(Course,on_delete=models.CASCADE)
+	module=models.ForeignKey(Module,on_delete=models.SET_NULL)
+
+class ComponentText(Componenet):
+	content=models.TextField()
+	
+class ComponentImage(Componenet)
+	content=models.ImageField()
 
 class Quiz(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	module=models.ForeignKey(Module,on_delete=models.SET_NULL)
 	pass_score = models.IntegerField()
 
 class Question(models.Model):
@@ -42,7 +57,7 @@ class Question(models.Model):
 	option_3 = models.TextField()
 	option_4 = models.TextField()
 	answer = models.CharField(max_length=1)
-
+	module=models.ForeignKey(Module,on_delete=models.CASCADE)
 
 """
 	???
@@ -54,6 +69,6 @@ class Take(models.Model):
 class Component_in_Module(models.Model):
 	pass
 
-class Question_in_Quiz(models.Model):
-	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-	question = models.ForeignKey(Question, on_delete=models.CASCADE)
+# class Question_in_Quiz(models.Model):
+# 	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+# 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
