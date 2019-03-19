@@ -33,16 +33,16 @@ class Module(models.Model):
 	order=models.IntegerField()
 	title=models.CharField(max_length=200)
 
-class Componenet(models.Model):
+class Component(models.Model):
 	order=models.IntegerField()
 	title=models.CharField(max_length=200)
 	course=models.ForeignKey(Course,on_delete=models.CASCADE)
 	module=models.ForeignKey(Module,null=True, blank=True,on_delete=models.SET_NULL)
 
-class ComponentText(Componenet):
+class ComponentText(Component):
 	content=models.TextField()
 	
-class ComponentImage(Componenet):
+class ComponentImage(Component):
 	content=models.ImageField()
 
 class Quiz(models.Model):
