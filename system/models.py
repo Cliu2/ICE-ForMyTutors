@@ -37,17 +37,17 @@ class Componenet(models.Model):
 	order=models.IntegerField()
 	title=models.CharField(max_length=200)
 	course=models.ForeignKey(Course,on_delete=models.CASCADE)
-	module=models.ForeignKey(Module,on_delete=models.SET_NULL)
+	module=models.ForeignKey(Module,null=True, blank=True,on_delete=models.SET_NULL)
 
 class ComponentText(Componenet):
 	content=models.TextField()
 	
-class ComponentImage(Componenet)
+class ComponentImage(Componenet):
 	content=models.ImageField()
 
 class Quiz(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	module=models.ForeignKey(Module,on_delete=models.SET_NULL)
+	module=models.ForeignKey(Module,null=True,blank=True,on_delete=models.SET_NULL)
 	pass_score = models.IntegerField()
 
 class Question(models.Model):
