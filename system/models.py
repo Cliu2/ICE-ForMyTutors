@@ -66,9 +66,8 @@ class Enroll(models.Model):
 	learner = models.ForeignKey(Course, on_delete=models.CASCADE)
 	course = models.ForeignKey(Learner, on_delete=models.CASCADE)
 	status = models.BooleanField()
+	progress = models.IntegerField()								# modules that visible to the learner
 
-class Component_in_Module(models.Model):
-	pass
 
 # class Question_in_Quiz(models.Model):
 # 	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
