@@ -28,7 +28,7 @@ class Module(models.Model):
 
 class Component(models.Model):
 	#order=models.IntegerField()
-	#title=models.CharField(max_length=200)
+	title=models.CharField(max_length=200)			# title of component?
 	course=models.ForeignKey(Course,on_delete=models.CASCADE)
 	#module=models.ForeignKey(Module,null=True, blank=True,on_delete=models.SET_NULL)
 
@@ -38,7 +38,7 @@ class ComponentText(Component):
 
 class ComponentImage(Component):
 	component = ForeignKey(Component, on_delete=models.CASCADE)
-	content=models.ImageField()
+	source=models.CharField(max_length=200)
 
 class Quiz(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -52,7 +52,7 @@ class Question(models.Model):
 	option_3 = models.TextField()
 	option_4 = models.TextField()
 	answer = models.CharField(max_length=1)
-	module=models.ForeignKey(Module,on_delete=models.CASCADE)
+	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
 
 """
 	???
@@ -62,12 +62,9 @@ class Enroll(models.Model):
 	course = models.ForeignKey(Learner, on_delete=models.CASCADE)
 	status = models.BooleanField()
 	progress = models.IntegerField()								# modules that visible to the learner
+	finish_time = models.DateField(initial=None)
 
-class Component_in_Module(models.Model):
+class Component_in_Module(models.Model):							# one
 	component = models.ForeignKey(Component, on_delete=models.CASCADE)
 	module = models.ForeignKey(Module, on_delete=models.CASCADE)
 	order = models.IntegerField()
-
-# class Question_in_Quiz(models.Model):
-# 	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-# 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
