@@ -9,8 +9,61 @@ from django.views.generic.list import ListView
 """
 	both users
 """
-def showCourses(request, id):
-	
+def showCourses(request, **kwargs):
+	user_id = kwargs['user_id']
+	users = Instructor.objects.get(id=user_id)
+	if len(users)==0:
+		type = 'learner'
+		user = Learner.objects.get(id=user_id)[0]
+		course_list = Enroll.objects.get(learner__id=user_id).values('course')
+	else:
+		user = users[0]
+		type = 'instructor'
+		course_list = Course.objects.get(instructor__id=user_id)
+	context = {
+		'course_list': course_list,
+		'type': type
+	}
+	return HttpResponse(template.render(context, request))
+
+
+def showModules(request, **kwargs):
+	u_id = kwargs['user_id']
+	c_id = kwargs['course_id']
+	users = Instructor.objects.get(id=user_id)
+	if len(users)==0:
+		type = 'learner'
+		#user = Learner.objects.get(id=user_id)[0]
+		course = Enroll.objects.get(learner_id=u_id, course_id=c_id).values('course')[0]
+	else:
+		type = 'instructor'
+		course = Course.objects.get(instructor__id=user_id)[0]
+	context = {
+		'course': course,
+		'type': type
+	}
+
+def showComponents(request, **kwargs):
+	pass
+
+"""
+	instructor manage course
+"""
+
+def manageModule(request, **kwargs):
+	pass
+def manageComponent(request, **kwargs):
+	pass
+def showQuizzes(request, **kwargs):
+	pass
+def viewQuiz(request, **kwargs):
+	pass
+
+"""
+	learner study course
+"""
+def takeQuiz(request, **kwargs):
+	pass
 
 """
 	instructor views
@@ -34,7 +87,7 @@ class showQuiz(ListView):
 
 """
 	learner views
-"""
+
 def showCourses(request, learner_id):			# course list for a learner
 	l_courses = Enroll.objects.get(learner__id=learner_id).values('course')
 	template = loader.get_template("course_list.html")
@@ -60,3 +113,4 @@ def studyModule(request,**kwargs):
 def takeQuiz(request,**kwargs):
 	#to be done
 	pass
+"""

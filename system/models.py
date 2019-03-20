@@ -1,13 +1,13 @@
 from django.db import models
 
 class Instructor(models.User):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
 	autobiagraphy=models.TextField()
 	def __str__(self):
 		return f'{self.user.first_name} {self.user.last_name} ({self.autobiagraphy})'
 
 class Learner(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
 	staffID = models.CharField(max_length=8)
 	def __str__(self):
 		return f'{self.user.username}'
