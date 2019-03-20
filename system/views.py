@@ -5,15 +5,25 @@ from .models import *
 from django.views.generic.list import ListView
 
 # Create your views here.
+
+"""
+	both users
+"""
+def showCourses(request, id):
+	
+
+"""
+	instructor views
+"""
 class ManageModule(ListView):
 	model=Module
 	template_name='manageModule.html'
 
-class showComponent(ListView):
+class ShowComponents(ListView):
 	model=ComponentText
 	template_name='component.html'
 
-class ShowCourse(ListView):
+class ShowCourses(ListView):
 	model = Course
 	template_name = 'courseList.html'
 
@@ -22,6 +32,9 @@ class showQuiz(ListView):
 	pass
 
 
+"""
+	learner views
+"""
 def showCourses(request, learner_id):			# course list for a learner
 	l_courses = Enroll.objects.get(learner__id=learner_id).values('course')
 	template = loader.get_template("course_list.html")

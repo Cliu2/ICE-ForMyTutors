@@ -1,24 +1,16 @@
 from django.db import models
 
-class Instructor(models.Model):
-
-	firstname=models.CharField(max_length=200)
-	lastname=models.CharField(max_length=200)
-	username=models.CharField(max_length=200)
-	# encodedPW=models.CharField(max_length=200)
-
-	#pwd will be handled by Django, so not included
+class Instructor(models.User):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	autobiagraphy=models.TextField()
 	def __str__(self):
-		return f'{self.firstname} {self.lastname} ({self.autobiagraphy})'
+		return f'{self.user.first_name} {self.user.last_name} ({self.autobiagraphy})'
 
 class Learner(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	staffID = models.CharField(max_length=8)
-	username = models.CharField(max_length=200)
-	email = models.EmailField()
-	# pwd = models.CharField(max_length=16)
-	firstname = models.CharField(max_length=200)
-	lastname = models.CharField(max_length=200)
+	def __str__(self):
+		return f'{self.user.username}'
 
 class Course(models.Model):
 	instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
@@ -32,17 +24,20 @@ class Module(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 	order=models.IntegerField()
 	title=models.CharField(max_length=200)
+	lmt = models.DateField(initial=datetime.date.today)
 
 class Component(models.Model):
-	order=models.IntegerField()
-	title=models.CharField(max_length=200)
+	#order=models.IntegerField()
+	#title=models.CharField(max_length=200)
 	course=models.ForeignKey(Course,on_delete=models.CASCADE)
-	module=models.ForeignKey(Module,null=True, blank=True,on_delete=models.SET_NULL)
+	#module=models.ForeignKey(Module,null=True, blank=True,on_delete=models.SET_NULL)
 
 class ComponentText(Component):
+	component = ForeignKey(Component, on_delete=models.CASCADE)
 	content=models.TextField()
 
 class ComponentImage(Component):
+	component = ForeignKey(Component, on_delete=models.CASCADE)
 	content=models.ImageField()
 
 class Quiz(models.Model):
@@ -68,6 +63,10 @@ class Enroll(models.Model):
 	status = models.BooleanField()
 	progress = models.IntegerField()								# modules that visible to the learner
 
+class Component_in_Module(models.Model):
+	component = models.ForeignKey(Component, on_delete=models.CASCADE)
+	module = models.ForeignKey(Module, on_delete=models.CASCADE)
+	order = models.IntegerField()
 
 # class Question_in_Quiz(models.Model):
 # 	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
