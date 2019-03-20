@@ -17,6 +17,10 @@ class ShowCourse(ListView):
 	model = Course
 	template_name = 'courseList.html'
 
+class showQuiz(ListView):
+	"""To be Done"""
+	pass
+
 
 def showCourses(request, learner_id):			# course list for a learner
 	l_courses = Enroll.objects.get(learner__id=learner_id).values('course')
@@ -35,3 +39,11 @@ def viewCourse(request, learner_id, course_id):
 		'l_progress': l_progress
 	}
 	return HttpResponse(template.render(context, request))
+
+def studyModule(request,**kwargs):
+	# to be done
+	pass
+
+def takeQuiz(request,**kwargs):
+	#to be done
+	pass
