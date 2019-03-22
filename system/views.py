@@ -12,17 +12,21 @@ from django.views.generic.list import ListView
 def showCourses(request, **kwargs):
 	user_id = kwargs['user_id']
 	users = Instructor.objects.get(id=user_id)
+	template = "showCourses.html"
 	if len(users)==0:
 		type = 'learner'
 		user = Learner.objects.get(id=user_id)[0]
 		course_list = Enroll.objects.get(learner__id=user_id).values('course')
+		status = Enroll.objects.get(learner__id=user_id).values('status')
 	else:
 		user = users[0]
 		type = 'instructor'
 		course_list = Course.objects.get(instructor__id=user_id)
+		status = course_list.values('status')
 	context = {
 		'course_list': course_list,
-		'type': type
+		'type': type,
+		'status': status,
 	}
 	return HttpResponse(template.render(context, request))
 
@@ -30,28 +34,50 @@ def showCourses(request, **kwargs):
 def showModules(request, **kwargs):
 	u_id = kwargs['user_id']
 	c_id = kwargs['course_id']
+	template = "showModules.html"
 	users = Instructor.objects.get(id=user_id)
 	if len(users)==0:
 		type = 'learner'
-		#user = Learner.objects.get(id=user_id)[0]
 		course = Enroll.objects.get(learner_id=u_id, course_id=c_id).values('course')[0]
+		modules = Module.objects.get(course__id=c_id)
+		#progress =
 	else:
 		type = 'instructor'
-		course = Course.objects.get(instructor__id=user_id)[0]
+		#course = Course.objects.get(instructor__id=user_id)[0]
 	context = {
 		'course': course,
 		'type': type
 	}
+	return HttpResponse(template.render(context, request));
 
 def showComponents(request, **kwargs):
-	pass
+	#u_id = kwargs['user_id']
+	#c_id = kwargs['course_id']
+	m_id = kwargs['module_id']
+	template = "showComponents.html"
+	components = Component_in_Module.objects.get(module__id=m_id).values('component')
+	context = {
+		'components': components,
+	}
+	return HttpResponse(template.render(context, request))
+
+
 
 """
 	instructor manage course
 """
 
 def manageModule(request, **kwargs):
-	pass
+	i_id = kwargs['instructor_id']
+	c_id = kwargs['course_id']
+	modules = Module.objects.get(course__id=c_id)
+	template = "manageModule.html"
+	context = {
+		'modules': modules,
+	}
+	return HttpResponse(template.render(context, request))
+
+
 def manageComponent(request, **kwargs):
 	pass
 def showQuizzes(request, **kwargs):
