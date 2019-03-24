@@ -30,7 +30,7 @@ class Course(models.Model):
 
 class Module(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	order=models.IntegerField()
+	order = models.IntegerField()
 	title=models.CharField(max_length=200)
 	lmt = models.DateTimeField(default=datetime.now)
 	def __str__(self):
@@ -65,8 +65,10 @@ class Question(models.Model):
 	quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
 
 class Enroll(models.Model):
-	learner = models.ForeignKey(Course, on_delete=models.CASCADE)
-	course = models.ForeignKey(Learner, on_delete=models.CASCADE)
+	learner = models.ForeignKey(Learner, on_delete=models.CASCADE)
+	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 	status = models.BooleanField()
 	progress = models.IntegerField()								# modules that visible to the learner
 	finish_time = models.DateField(default=None)
+	def __str__(self):
+		return f'{self.learner} | {self.course.title}'
