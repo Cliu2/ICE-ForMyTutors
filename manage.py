@@ -2,7 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+PYTHONDONTWRITEBYTECODE=1
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ICE.settings')
