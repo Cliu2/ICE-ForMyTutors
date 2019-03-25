@@ -8,7 +8,7 @@
         <p hidden> {{ question.answer }} </p>
         
         <div class="row">
-            <form action="submitAnswer" method="post" id="question">
+            <form action="submitAnswer" method="get" id="question">
                 {% for question in question_list %}
                 <!-- REQUIRED QUESTION -->
                 <h4>{{ question.description }}</h4>

@@ -108,11 +108,31 @@ def takeQuiz(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 def submitAnswer(request, **kwargs):
+	m_id = kwargs['module_id']
 	res = request.GET
 	template =loader.get_template("submitAnswer.html")
+	quiz = Quiz.objects.filter(module__id = m_id)[0]
+	submitted = {x: res[x] for x in res if RepresentsInt(x)}
+	count = 0
+	for x in submitted:
+		if submitted[x] == res["q"+x]:
+			count=+1
+	count=count*100/len(submitted)
+	if count >= quiz.pass_score:
+		passing = "pass"
+	else:
+		passing = "fail"
 	context = {
-		'res':res,
+		'submitted':submitted,
+		'pass':passing,
 	}
 	return HttpResponse(template.render(context, request))
 """
