@@ -1,13 +1,18 @@
-{% block title %}<h1>Your Course List</h1>{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+	<h1>Your Course List</h1>
+	<link rel="stylesheet" type="text/css" href="style_show_c.html">
+</head>
 
-{% block content %}
-	<ul>
-	<h5>
-        {{ user }}<br >
-        {{ type }}<br >
-        {{ course_list }}<br>
-        {{ status }}
-    </h5>
+<body>
+	{% if type == "instructor" %}
+		<ul>
+		{% for course in course_list %}
+			<li><a href="{{course.id}}/">{{course}}</a></li>
+		</ul>
+		{% endfor %}
 		<button>Create Course</button>
-	</ul>
-{% endblock %}
+	{% endif %}
+</body>
+</html>

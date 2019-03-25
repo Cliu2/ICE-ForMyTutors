@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.views.generic import TemplateView
 from .models import *
 from django.views.generic.list import ListView
 from django.views import View
+from .forms import *
 
 # Create your views here.
 
@@ -59,7 +61,7 @@ def showModules(request, **kwargs):
 		progress = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
 	else:
 		type = 'instructor'
-		course = Course.objects.filter(instructor__id=u_id)
+		course = Course.objects.filter(id=c_id)[0]
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
 		progress = -1
 	context = {
@@ -67,6 +69,7 @@ def showModules(request, **kwargs):
 		'modules': modules,
 		'type': type,
 		'progress': progress,
+		'u_id': u_id,
 	}
 	return HttpResponse(template.render(context, request))
 """
@@ -89,15 +92,20 @@ def showComponents(request, **kwargs):
 
 #	instructor manage course
 
-"""
-def enterModuleInfo(request, **kwargs):
+
+class enterModuleInfo():
 	template = loader.get_template("enterModuleInfo.html")
+	order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
 	context = {
 		'i_id': kwargs['instructor_id'],
 		'c_id': kwargs['course_id'],
+		'order': order,
 	}
-	return HttpResponse(template.render(context, request))
+	def get(self, request):
+		form =
+		return HttpResponse(template.render(context, request))
 
+"""
 class addModule(View):
 	def post(self, request):
 		course = Course.objects.filter(c_id=request.POST.get("c_id"))								# do not care order so far

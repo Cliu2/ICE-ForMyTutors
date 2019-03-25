@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 
-class Instructor(User):												# an instructor object has no id attribute before save()
+class Instructor(User):												
 	autobiagraphy=models.TextField()
 	def __str__(self):
 		return f'{self.first_name} {self.last_name}'
