@@ -91,17 +91,21 @@ def showComponents(request, **kwargs):
 
 
 #	instructor manage course
+def enterModuleInfo(request, **kwargs):
+ 	template = loader.get_template("enterModuleInfo.html")
+ 	order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
+ 	context = {
+ 		'i_id': kwargs['instructor_id'],
+ 		'c_id': kwargs['course_id'],
+ 		'order': order,
+ 	}
+ 	return HttpResponse(template.render(context, request))
 
 
-def enterModuleInfo(request):
-	template = loader.get_template("enterModuleInfo.html")
-	order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
-	context = {
-		'i_id': kwargs['instructor_id'],
-		'c_id': kwargs['course_id'],
-		'order': order,
-	}
-	return HttpResponse(template.render(context, request))
+def addModule(request, **kwargs):
+	msg = request.POST
+	c_title = msg['title']
+	
 
 """
 class addModule(View):

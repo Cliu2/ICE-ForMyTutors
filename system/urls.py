@@ -9,7 +9,7 @@ urlpatterns = [
 
     # instructor editing mode
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
-    #path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule.as_view(), name='manageModule'),                       # module list edit mode
+    path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule.as_view(), name='manageModule'),                       # module list edit mode
     #path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/',views.manageComponent, name='showComponent'),      # component list edit mode
     #path('manage/<int:instructor_id>/<int:course_id>/<int: module>/quiz/', views.showQuizzes, name='showQuizzes'),    # add quiz view
     #path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/', views.viewQuiz, name='viewQuiz'),
