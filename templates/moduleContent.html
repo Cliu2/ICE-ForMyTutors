@@ -1,0 +1,14 @@
+{{course}}
+{{module}}
+{{instructor_id}}
+
+{% block content %}
+	{% for component in components %}
+		<li>{{component.title}}</li>
+		{% if component.istext %}
+			<li>{{component.content}}</li>
+		{% endif %}
+	{% endfor %}
+{% endblock%}
+
+<a href="{% url 'display_available_components' instructor_id course.pk module.pk %}">add more</a>

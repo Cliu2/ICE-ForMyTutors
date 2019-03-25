@@ -47,8 +47,8 @@ class Course(models.Model):
 		"""
 			Each course will keep a list of accessibility of the modules
 			Prams:
-				- progress: the index of modules undertaking.
-					(e.g. progress=3 means module4 and then on are not available)
+				- progress: the index of modules undertaking. start from 0
+					(e.g. progress=3 means module3 and then on are not available)
 		"""
 		self.modules=Module.objects.filter(course__id=self.pk)
 		self.module_access=[True if i<=progress else False for i in range(len(self.modules))]
@@ -78,6 +78,7 @@ class Module(models.Model):
 		"""
 			set the position of ranking of this module inside a course
 		"""
+		"need to add auto manage order"
 		self.order=index
 		self.save()
 

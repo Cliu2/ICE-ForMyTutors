@@ -1,0 +1,12 @@
+{{course}}
+{{module}}
+{{components.len}}
+{{instructor_id}}
+
+{% block content %}
+{% for component in components %}
+	{{component}
+	<a href="{% url 'append_component' instructor_id course.pk module.pk component.pk %}">{{component.title}}</a>
+	}
+{% endfor %}
+{% endblock %}
