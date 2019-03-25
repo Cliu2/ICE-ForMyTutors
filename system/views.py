@@ -109,11 +109,11 @@ def takeQuiz(request, **kwargs):
 	return HttpResponse(template.render(context, request))
 
 def submitAnswer(request, **kwargs):
-	
-
-	
-	
-	
+	res = request.GET
+	template =loader.get_template("submitAnswer.html")
+	context = {
+		'res':res,
+	}
 	return HttpResponse(template.render(context, request))
 """
 	instructor manage course
