@@ -1,0 +1,37 @@
+{% block title %}This is the page: quiz.html{% endblock %}
+
+{% block content %}
+	<ul>
+    <h5> 
+        question_list: {{ question_list }}<br >
+        
+        <p hidden> {{ question.answer }} </p>
+        
+        <div class="row">
+            <form action="submitAnswer" method="post" id="question">
+                {% for question in question_list %}
+                <!-- REQUIRED QUESTION -->
+                <h4>{{ question.description }}</h4>
+                <!-- END OF REQUIRED QUESTION --> 
+                <!-- CHOICES -->
+                    <label for="choice-1">
+                        <input type="radio" id="choice-1" name={{ question.pk }} value="A" />&nbsp;{{ question.option_1 }}<br/>
+                    </label>
+                    <label for="choice-2">
+                        <input type="radio" id="choice-2" name={{ question.pk }} value="B" />&nbsp;{{ question.option_2 }}<br/>
+                    </label>
+                    <label for="choice-3">
+                        <input type="radio" id="choice-3" name={{ question.pk }} value="C" />&nbsp;{{ question.option_3 }}<br/>
+                    </label>
+                    <label for="choice-4">
+                        <input type="radio" id="choice-4" name={{ question.pk }} value="D" />&nbsp;{{ question.option_4 }}<br/>
+                    </label>
+                    <label for="answer">
+                        <input type="hidden" id="answer" name="q{{ question.pk }}"" value={{ question.answer }} />
+                    </label>
+                {% endfor %}
+                <input type="submit" class="blue button" value="Send" />
+            </form>
+        </div>
+	</ul>
+{% endblock %}

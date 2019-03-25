@@ -5,9 +5,9 @@ urlpatterns = [
     # both users view mode
     path('view/<int:user_id>/', views.viewEnrolled, name='viewEnrolled'),                                         # view course list
     path('view/<int:user_id>/<int:course_id>/', views.viewCourse, name='viewCourse'),                           # view module list
-    path('view/<int:user_id>/<int:course_id>/<int:module_id>', views.viewModule, name='viewModule'),        # view component list
+    path('view/<int:user_id>/<int:course_id>/<int:module_id>/', views.viewModule, name='viewModule'),        # view component list
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/', views.takeQuiz, name='takeQuiz'),          # learner takes quiz
-    path('view/<int:user_id>/<int:course_id>/<int:module_id>', views.submitAnswer, name='submitAnswer'),        # learner submits answer
+    path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/submitAnswer/', views.submitAnswer, name='submitAnswer'),        # learner submits answer
 
     # instructor editing mode
     path('manage/<int:instructor_id>/<int:course_id>/add/',views.manageModule, name='manageModule'),                                            # edit module list

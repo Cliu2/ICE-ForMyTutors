@@ -20,17 +20,20 @@ def viewEnrolled(request, **kwargs):
 	# 
 	user_id = kwargs['user_id']
 	users = Instructor.objects.filter(id=user_id)
-	template = loader.get_template("showCourses.html")
+	template = loader.get_template("course_list.html")
 	if len(users)==0:
+		users = Learner.objects.filter(id=user_id)
 		type = 'learner'
 		course_list = Enrolment.objects.filter(learner__id=user_id).order_by('status').values('course')
 		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 
 	else:
+		user = users[0]
 		type = 'instructor'
 		course_list = Course.objects.filter(instructor__id=user_id)
 		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 	context = {
+		'user': users,
 		'course_list': course_list,
 		'type': type,
 		'status': status,
@@ -76,9 +79,9 @@ def viewModule(request, **kwargs):
 	c_id = kwargs['course_id']
 	m_id = kwargs['module_id']
 	template =loader.get_template("moduleContent.html")
-	module = Module.objects.filter(module_id= m_id)[0]
+	module = Module.objects.filter(id= m_id)[0]
 	users = Instructor.objects.filter(id=u_id)  
-	components = Component.objects.filter(module__id=m_id).order_by('order').values('component')
+	components = Component.objects.filter(module__id=m_id).order_by('order')
 	if len(users) == 0:
 		type = 'learner'
 		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
@@ -97,15 +100,19 @@ def viewModule(request, **kwargs):
 def takeQuiz(request, **kwargs):
 	m_id = kwargs['module_id']
 	template =loader.get_template("takeQuiz.html")
-	quiz = Quiz.objects.filter(module__id = m_id).values('id')[0]
-	q_id = quiz.values('id')
-	question_list = Question.objects.filter(quiz__id = q_id).order_by('?')[:(quiz.values('num_to_draw'))]
+	quiz = Quiz.objects.filter(module__id = m_id)[0]
+	q_id = quiz.pk
+	question_list = Question.objects.filter(quiz__id = q_id).order_by('?')[:(quiz.num_to_draw)]
 	context = {
 		'question_list': question_list,
 	}
 	return HttpResponse(template.render(context, request))
 
 def submitAnswer(request, **kwargs):
+	
+
+	
+	
 	
 	return HttpResponse(template.render(context, request))
 """
