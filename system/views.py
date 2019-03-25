@@ -104,8 +104,10 @@ def enterModuleInfo(request, **kwargs):
 
 def addModule(request, **kwargs):
 	msg = request.POST
-	c_title = msg['title']
-	
+	m_title = msg['title']
+	course = Course.objects.filter(id=msg['c_id'])[0]
+	order = msg['order']
+	#module = Module(course=)
 
 """
 class addModule(View):
