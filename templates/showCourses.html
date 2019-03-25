@@ -1,12 +1,13 @@
-{% block title %}This is the page: showCourses.html{% endblock %}
+{% block title %}<h1>Your Course List</h1>{% endblock %}
 
 {% block content %}
 	<ul>
-	<h5> 
+	<h5>
         {{ user }}<br >
         {{ type }}<br >
-        {{ course_list }}<br >
+        {{ course_list }}<br>
         {{ status }}
     </h5>
+		<button>Create Course</button>
 	</ul>
 {% endblock %}
