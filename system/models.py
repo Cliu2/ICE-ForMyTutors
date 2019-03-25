@@ -17,6 +17,15 @@ class Learner(User):
 	def __str__(self):
 		return f'{self.first_name} {self.last_name}'
 
+
+class Category(models.Model):
+	name=models.CharField(max_length=200)
+	description=models.TextField()
+
+	def __str__(self):
+		return f'Category: {self.name}'
+		
+
 class Course(models.Model):
 	instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
 	category = models.ForeignKey(Category,on_delete=models.CASCADE)
