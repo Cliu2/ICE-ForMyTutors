@@ -10,11 +10,12 @@ from django.views.generic.list import ListView
 	both users
 """
 
-def showCourses(request, **kwargs):
-	# 
-	# 	type: determines learner page/ instructor page
-	# 	course_list: query course object enrolled by user/created by instructor, not ordered
-	# 	status: might determine display or not, or the order to display (currently a boolean object, to be changed to int) 
+def viewEnrolled(request, **kwargs):
+	# 	
+	#	Design Model 1: viewEnrolled(user_id)
+	# 	type: determines learner page/instructor page
+	# 	course_list: query course object enrolled by user/created by instructor, ordered by status
+	# 	status: query object might determine display or not, or the order to display 
 	# 	user: the user exactly
 	# 
 	user_id = kwargs['user_id']
@@ -22,25 +23,23 @@ def showCourses(request, **kwargs):
 	template = loader.get_template("showCourses.html")
 	if len(users)==0:
 		type = 'learner'
-		user = Learner.objects.filter(id=user_id)[0]
-		course_list = Enroll.objects.filter(learner__id=user_id).values('course')
-		status = Enroll.objects.filter(learner__id=user_id).values('status')
+		course_list = Enrolment.objects.filter(learner__id=user_id).order_by('status').values('course')
+		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 
 	else:
-		user = users[0]
 		type = 'instructor'
 		course_list = Course.objects.filter(instructor__id=user_id)
-		status = course_list.values('status')
+		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 	context = {
 		'course_list': course_list,
 		'type': type,
 		'status': status,
-		'user':user,
+
 	}
 	return HttpResponse(template.render(context, request))
 
 
-def showModules(request, **kwargs):
+def viewCourse(request, **kwargs):
 	# 
 	# 	type: determines learner page/ instructor page
 	# 	course: a certain course enrolled by user/created by instructor that has entered
@@ -49,13 +48,13 @@ def showModules(request, **kwargs):
 	# 
 	u_id = kwargs['user_id']
 	c_id = kwargs['course_id']
-	template = loader.get_template("showModules.html")
+	template = loader.get_template("courseContent.html")
 	users = Instructor.objects.filter(id=u_id)
 	if len(users)==0:
 		type = 'learner'
-		course = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('course')[0]
+		course = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('course')[0]
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
-		progress = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
+		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
 	else:
 		type = 'instructor'
 		course = Course.objects.filter(instructor__id=u_id)
@@ -69,22 +68,46 @@ def showModules(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
-def showComponents(request, **kwargs):
+def viewModule(request, **kwargs):
 	# 
 	# 	components: a query component object in a certain module ordered by order attribute
 	# 
-	#u_id = kwargs['user_id']
-	#c_id = kwargs['course_id']
+	u_id = kwargs['user_id']
+	c_id = kwargs['course_id']
 	m_id = kwargs['module_id']
-	template =loader.get_template("showComponents.html")
-	components = Component.objects.filter(module__id=m_id).values('component').order_by('order')
+	template =loader.get_template("moduleContent.html")
+	module = Module.objects.filter(module_id= m_id)[0]
+	users = Instructor.objects.filter(id=u_id)  
+	components = Component.objects.filter(module__id=m_id).order_by('order').values('component')
+	if len(users) == 0:
+		type = 'learner'
+		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
+	else:
+		type = 'instructor'
+		progress = -1
 	context = {
+		'type': type,
 		'components': components,
+		'module': module,
+		'progress': progress,
 	}
 	return HttpResponse(template.render(context, request))
 
 
+def takeQuiz(request, **kwargs):
+	m_id = kwargs['module_id']
+	template =loader.get_template("takeQuiz.html")
+	quiz = Quiz.objects.filter(module__id = m_id).values('id')[0]
+	q_id = quiz.values('id')
+	question_list = Question.objects.filter(quiz__id = q_id).order_by('?')[:(quiz.values('num_to_draw'))]
+	context = {
+		'question_list': question_list,
+	}
+	return HttpResponse(template.render(context, request))
 
+def submitAnswer(request, **kwargs):
+	
+	return HttpResponse(template.render(context, request))
 """
 	instructor manage course
 """
@@ -100,62 +123,12 @@ def manageModule(request, **kwargs):
 	return HttpResponse(template.render(context, request))
 
 
-def manageComponent(request, **kwargs):
+def selectComponent(request, **kwargs):
 	pass
-def showQuizzes(request, **kwargs):
+def addComponent(request, **kwargs):
 	pass
-def viewQuiz(request, **kwargs):
+def selectQuiz(request, **kwargs):
 	pass
-
-"""
-	learner study course
-"""
-def takeQuiz(request, **kwargs):
+def addQuiz(request, **kwargs):
 	pass
 
-"""
-	instructor views
-"""
-class ManageModule(ListView):
-	pass
-
-class ShowComponents(ListView):
-	pass
-
-class ShowCourses(ListView):
-	pass
-
-class showQuiz(ListView):
-	"""To be Done"""
-	pass
-
-
-"""
-	learner views
-
-def showCourses(request, learner_id):			# course list for a learner
-	l_courses = Enroll.objects.get(learner__id=learner_id).values('course')
-	template = loader.get_template("course_list.html")
-	context = {
-		'l_courses': l_courses
-	}
-	return HttpResponse(template.render(context, request))
-
-def viewCourse(request, learner_id, course_id):
-	c_modules = Module.objects.get(course__id=course_id)
-	l_progress = Enroll.objects.get(course__id=course_id, learner__id=learner_id).values('progress')
-	template = loader.get_template("course_content.html")
-	context = {
-		'c_modules': c_modules,
-		'l_progress': l_progress
-	}
-	return HttpResponse(template.render(context, request))
-
-def studyModule(request,**kwargs):
-	# to be done
-	pass
-
-def takeQuiz(request,**kwargs):
-	#to be done
-	pass
-"""

@@ -2,17 +2,17 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # both users
-    path('view/<int:user_id>/', views.showCourses, name='showCourses'),                                               # view course list
-    path('view/<int:user_id>/<int:course_id>/', views.showModules, name='showModules'),                               # view module list
-    path('view/<int:user_id>/<int:course_id>/<int:module_id>', views.showComponents, name='showComponents'),          # view component list
+    # both users view mode
+    path('view/<int:user_id>/', views.viewEnrolled, name='viewEnrolled'),                                         # view course list
+    path('view/<int:user_id>/<int:course_id>/', views.viewCourse, name='viewCourse'),                           # view module list
+    path('view/<int:user_id>/<int:course_id>/<int:module_id>', views.viewModule, name='viewModule'),        # view component list
+    path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/', views.takeQuiz, name='takeQuiz'),          # learner takes quiz
+    path('view/<int:user_id>/<int:course_id>/<int:module_id>', views.submitAnswer, name='submitAnswer'),        # learner submits answer
 
     # instructor editing mode
-    path('manage/<int:instructor_id>/<int:course_id>/',views.manageModule, name='manageModule'),                       # module list edit mode
-    path('manage/<int:instructor_id>/<int:course_id>/<int:module>/',views.manageComponent, name='showComponent'),      # component list edit mode
-    path('manage/<int:instructor_id>/<int:course_id>/<int: module>/quiz/', views.showQuizzes, name='showQuizzes'),    # add quiz view
-    path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/', views.viewQuiz, name='viewQuiz'),
-
-    # learner study mode
-    path('study/<int:learner_id>/<int:course_id>/<int:module_id>/quiz/', views.takeQuiz, name='takeQuiz'),                # learner take quiz
+    path('manage/<int:instructor_id>/<int:course_id>/add/',views.manageModule, name='manageModule'),                                            # edit module list
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addComponent/',views.selectComponent, name='selectComponent'),             # edit component list
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addComponent/<int:component_id>',views.addComponent, name='addComponent'), # edit module 
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/selectQuiz/', views.selectQuiz, name='selectQuiz'),                        # edit module quiz
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addQuiz/<int:quiz_id>', views.addQuiz, name='addQuiz'),                    # edit quiz
 ]
