@@ -13,3 +13,19 @@ from django.test import TestCase
 # Learner3 id=14
 # Learner4 id=15
 #
+#
+# success senario
+# learner2:
+#   view enrolled courses: http://127.0.0.1:8000/system/view/13/
+#   view modules in course 1: http://127.0.0.1:8000/system/view/13/1/
+#   view components in module 1 entitled: <<It has an order 0>>: http://127.0.0.1:8000/system/view/13/1/4/
+#   take quiz of module 1: http://127.0.0.1:8000/system/view/13/1/4/quiz/
+#   submit answer: http://127.0.0.1:8000/system/view/13/1/4/quiz/submitAnswer
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 

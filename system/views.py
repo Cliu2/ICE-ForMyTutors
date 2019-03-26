@@ -130,7 +130,7 @@ def submitAnswer(request, **kwargs):
 	for x in submitted:
 		if submitted[x] == res["q"+x]:
 			count+=1
-	count=count*100/len(submitted)
+	count=count*100/quiz.num_to_draw
 	if count >= quiz.pass_score:
 		passing = "pass"
 		prog =  Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
