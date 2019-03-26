@@ -1,16 +1,26 @@
-{{course}}
-{{module}}
-{{instructor_id}}
+{% extends 'title.html' %}
 
 {% block content %}
-	{% for component in components %}
-		<li>{{component.title}}</li>
-		{% if component.istext %}
-			<li>{{component.content}}</li>
-		{% elif component.isimage %}
-			<li>{{component.path}}</li>
-		{% endif %}
-	{% endfor %}
+	{% if len_component > 0 %}
+	<ul id="contianer"></ul>
+		{% for component in components %}
+			<li draggable="true">
+				<p>{{component.title}}</p>
+				{% if component.istext %}
+					<p>{{component.content}}</p>
+				{% elif component.isimage %}
+					<p>{{component.path}}</p>
+				{% endif %}
+			</li>
+		{% endfor %}
+	{% else %}
+		<p>No component has been added to this module yet!</p>
+	{% endif %}
+	{% if len_quiz > 0 %}
+		<li>{{quiz}}</li>
+	{% else %}
+		<p>No quiz has been added to this module yet!</p>
+	{% endif %}
 {% endblock%}
 
 <a href="{% url 'display_available_components' instructor_id course.pk module.pk %}">add more</a>
