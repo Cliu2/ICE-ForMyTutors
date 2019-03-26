@@ -6,5 +6,10 @@
         submitted: {{ submitted }}<br >
         pass: {{ pass }}
     </h5>
+    {% if pass == 'pass' %}
+    <h3> Congratulations! You may enter the next module!</h3>
+    {% else %}
+    <h3> You didn't pass! Please try again!</h3>
+    {% endif %}
 	</ul>
 {% endblock %}

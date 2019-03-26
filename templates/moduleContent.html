@@ -12,7 +12,10 @@
     {% if type == 'learner' %}
         {% for component in components %}
         {{ component.getHTML | safe}}
-        {% endfor %}
+		{% endfor %}
+		{% if module.order == progress %}
+		<br ><a href = "./quiz/"> take quiz </a>
+		{% endif %}
     {% else %}
 		{% for component in components %}
 			<h5>{{ component.title }}    

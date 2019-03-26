@@ -119,7 +119,9 @@ def RepresentsInt(s):
         return False
 
 def submitAnswer(request, **kwargs):
+	c_id = kwargs['course_id']
 	m_id = kwargs['module_id']
+	u_id = kwargs['user_id']
 	res = request.GET
 	template =loader.get_template("submitAnswer.html")
 	quiz = Quiz.objects.filter(module__id = m_id)[0]
@@ -127,10 +129,12 @@ def submitAnswer(request, **kwargs):
 	count = 0
 	for x in submitted:
 		if submitted[x] == res["q"+x]:
-			count=+1
+			count+=1
 	count=count*100/len(submitted)
 	if count >= quiz.pass_score:
 		passing = "pass"
+		prog =  Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
+		Enrolment.objects.filter(learner__id = u_id,course__id = c_id).update(progress=prog+1)
 	else:
 		passing = "fail"
 	context = {
