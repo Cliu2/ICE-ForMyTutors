@@ -73,7 +73,6 @@ $(document).ready(function(){
 		neworder=neworder.slice(0,-1);
 		var link=document.querySelector("#save");
 		newhref=link.href.replace('neworder',neworder);
-		alert(newhref)
 
 		$("#save").attr("href",newhref);
 		link.click();

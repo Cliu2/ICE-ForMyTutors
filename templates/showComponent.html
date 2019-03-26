@@ -10,4 +10,6 @@
 			<a href="{% url 'append_component' instructor.pk course.pk module.pk component.pk %}">{{component.title}}</a>
 		{% endfor %}
 	{% endif %}
+
+	<a href="{% url 'displayModuleContent' instructor.pk course.pk module.pk %}">Back</a>
 {% endblock %}

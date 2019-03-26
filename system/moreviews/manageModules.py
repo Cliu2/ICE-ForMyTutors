@@ -44,33 +44,11 @@ def addComponent(request,**kwargs):
 	component.setOrder(index)
 	component.save()
 
-	# display all the components and quiz under current module
-	all_text_components=ComponentText.objects.filter(module__id=module_id)
-	all_image_components=ComponentImage.objects.filter(module__id=module_id)
-	quiz=Quiz.objects.filter(module__id=module_id)
-	all_components=[None for i in range(len(all_text_components)+len(all_image_components))]
-	for t in all_text_components:
-		t.istext=True
-		all_components[t.order]=t
-	for i in all_image_components:
-		i.isimage=True
-		all_components[i.order]=i
-	len_quiz=quiz.count()
-	if len_quiz>0:
-		quiz=quiz[0]
+	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
+																		   kwargs['course_id'],
+																		   kwargs['module_id']))
 
-
-	template=loader.get_template("moduleContent.html")
-	context={'components':all_components,
-			 'len_component':len(all_components),
-			 'quiz':quiz,
-			 'len_quiz':len_quiz,
-			 'instructor':instructor,
-			 'course':course,
-			 'module':module
-			 }
-	return HttpResponse(template.render(context,request))
-
+	
 def displayModuleContent(request, **kwargs):
 	module_id=kwargs['module_id']
 	module=Module.objects.get(id=module_id)
@@ -115,6 +93,24 @@ def saveOrder(request,**kwargs):
 		# print(component)
 		# print("new index:",indexToSet)
 		component.setOrder(indexToSet)
+
+	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
+																		   kwargs['course_id'],
+																		   kwargs['module_id']))
+
+def removeComponent(request,**kwargs):
+	component=Component.objects.get(id=kwargs['component_id'])
+	component.module=None
+	component.order=-1
+	component.save()
+
+	#correct the order of rest components
+	components=Component.objects.filter(module__id=kwargs['module_id']).order_by('order')
+	index=0
+	for c in components:
+		c.order=index
+		c.save()
+		index+=1
 
 	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
 																		   kwargs['course_id'],
