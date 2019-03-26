@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.views.generic import TemplateView
+from django.core.exceptions import SuspiciousOperation
 from .models import *
 from django.views.generic.list import ListView
 from django.views import View
@@ -33,7 +34,9 @@ def showCourses(request, **kwargs):
 		user = users[0]
 		type = 'instructor'
 		course_list = Course.objects.filter(instructor__id=user_id)
-		status = course_list.values('status')[0]
+		status=None
+		if course_list.count()>0:
+			status = course_list.values('status')[0]
 	context = {
 		'course_list': course_list,
 		'type': type,
@@ -62,6 +65,8 @@ def showModules(request, **kwargs):
 	else:
 		type = 'instructor'
 		course = Course.objects.filter(id=c_id)[0]
+		if course.instructor.pk!=u_id:
+			raise SuspiciousOperation("Course does not belong to current instructor!")
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
 		progress = -1
 	context = {

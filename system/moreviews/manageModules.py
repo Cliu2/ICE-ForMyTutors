@@ -11,11 +11,16 @@ from django.core.exceptions import SuspiciousOperation
 from ..forms import *
 from ..models import *
 
+def checkCourseBelongToInstructor(course,instructor):
+	if course.instructor.pk!=instructor.pk:
+		raise SuspiciousOperation("Course does not belong to current instructor!")
+
 def selectComponent(request,**kwargs):
 	course_id=kwargs['course_id']
 	module_id=kwargs['module_id']
 	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
 	course=Course.objects.get(id=course_id)
+	checkCourseBelongToInstructor(course,instructor)
 	module=Module.objects.get(id=module_id)
 	all_components=Component.objects.filter(course__id=course_id, module__isnull=True)
 
@@ -31,6 +36,7 @@ def selectComponent(request,**kwargs):
 def addComponent(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])
 	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	checkCourseBelongToInstructor(course,instructor)
 	module_id=kwargs['module_id']
 	component_id=kwargs['component_id']
 	component=Component.objects.get(id=component_id)
@@ -54,6 +60,7 @@ def displayModuleContent(request, **kwargs):
 	module=Module.objects.get(id=module_id)
 	course=Course.objects.get(id=kwargs['course_id'])
 	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	checkCourseBelongToInstructor(course,instructor)
 	all_text_components=ComponentText.objects.filter(module__id=module_id)
 	all_image_components=ComponentImage.objects.filter(module__id=module_id)
 	quiz=Quiz.objects.filter(module__id=module_id)
@@ -80,6 +87,9 @@ def displayModuleContent(request, **kwargs):
 	return HttpResponse(template.render(context,request))
 
 def saveOrder(request,**kwargs):
+	course=Course.objects.get(id=kwargs['course_id'])
+	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	checkCourseBelongToInstructor(course,instructor)
 	neworder=kwargs['neworder']
 	new_orders=neworder.split('-')
 	new_orders=[int(x) for x in new_orders]
@@ -99,6 +109,10 @@ def saveOrder(request,**kwargs):
 																		   kwargs['module_id']))
 
 def removeComponent(request,**kwargs):
+	course=Course.objects.get(id=kwargs['course_id'])
+	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	checkCourseBelongToInstructor(course,instructor)
+
 	component=Component.objects.get(id=kwargs['component_id'])
 	component.module=None
 	component.order=-1
