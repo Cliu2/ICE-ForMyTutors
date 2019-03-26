@@ -15,6 +15,9 @@ urlpatterns = [
     path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/addComponent/<int:component_id>',views.addComponent, name='addComponent'), # edit module 
     path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/selectQuiz/', views.selectQuiz, name='selectQuiz'),                        # edit module quiz
     path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/addQuiz/<int:quiz_id>', views.addQuiz, name='addQuiz'),                    # edit quiz
+    
     path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/modiModuleOrd/',views.modiModuleOrd,name='modiModuleOrd'),
     path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/modiModuleOrd/moduleOrder/',views.moduleOrder,name='moduleOrder'),
+    path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/<int:component_id>/modiCompOrd/', views.modiCompOrd, name='modiCompOrd'),
+    path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/<int:component_id>/modiCompOrd/compOrder/', views.compOrder, name='compOrder'),
 ]

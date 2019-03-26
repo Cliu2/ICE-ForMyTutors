@@ -162,7 +162,6 @@ def modiModuleOrd(request,**kwargs):
 
 def moduleOrder(request,**kwargs):
 	res = request.GET 
-	
 	c_id = kwargs['course_id']
 	template =loader.get_template("moduleOrder.html")
 	modules = Module.objects.filter(course__id=c_id).order_by('order')
@@ -184,7 +183,53 @@ def moduleOrder(request,**kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 	
-		
+def modiCompOrd(request, **kwargs):
+	m_id = kwargs['module_id']
+	comp_id = kwargs['component_id']
+	template =loader.get_template("modiCompOrd.html")
+	components = Component.objects.filter(module__id=m_id).order_by('order')
+	component = Component.objects.filter(id=comp_id)[0]
+	ex_component = components.exclude(id=comp_id)
+	largest_order_comp=ex_component.order_by('-order')[0]	
+	context = {
+		'ex_component': ex_component,
+		'components': largest_order_comp,
+		'component' : component,
+	}
+	return HttpResponse(template.render(context, request))
+
+
+
+
+
+def compOrder(request, **kwargs):
+	res = request.GET 
+	m_id = kwargs['module_id']
+	template =loader.get_template("compOrder.html")
+	components = Component.objects.filter(module__id=m_id).order_by('order')
+	compList = []
+	if res['choice'] == 'last':
+		for component in components:
+			if component.id != int(res['exclu']):
+				compList.append(component.id)
+			compList.append(int(res['exclu']))
+	else:
+		for component in components:	
+			if component.id != int(res['exclu']):
+				if component.id == int(res['choice']):
+					compList.append(int(res['exclu']))
+				compList.append(component.id)
+	for i ,c in enumerate(compList):
+		Component.objects.filter(id = c).update(order = i)
+	context = {
+	}
+	return HttpResponse(template.render(context, request))
+
+
+
+
+
+
 
 def manageModule(request, **kwargs):
 	pass

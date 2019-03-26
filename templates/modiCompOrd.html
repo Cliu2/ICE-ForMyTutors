@@ -1,0 +1,41 @@
+{% block title %}This is the page: modiComponentOrd.html{% endblock %}
+
+{% block content %}
+	<ul>
+    <h5>
+        ex_component: {{ ex_component }} <br >
+        components: {{ components }} <br >  
+        component: {{ component }} <br >
+    </h5>
+{% endblock %}
+
+
+<div class="row">
+        <form action="compOrder" method="get" id="question">
+            
+            <!-- REQUIRED QUESTION -->
+            <h4>Please select the space you want to insert component in:</h4>
+            <!-- END OF REQUIRED QUESTION --> 
+            <!-- CHOICES -->
+            {% for comp in ex_component %}
+                <label for="choice">
+                    <input type="radio" name="choice" value={{ comp.pk }} />&nbsp;before {{ comp.title }}<br/>
+                </label>
+                {% if comp == components %}
+                <label for="choice">
+                    <input type="radio" name="choice" value="last" />&nbsp;after {{ comp.title }}<br/>
+                </label>
+                {% endif %}
+            {% endfor %}
+            <label for="choice">
+                    <input type="hidden" name="exclu" value={{ component.pk }} />
+            </label>
+            <input type="submit" class="blue button" value="Send" />
+        </form>
+    </div>
+{% for ex in ex_component %}
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<-----  </p>
+<h4>{{ ex.title }}<br ></h4>
+{% endfor %}
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<-----  </p>
+</ul>
