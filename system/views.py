@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.views.generic import TemplateView
-from django.core.exceptions import SuspiciousOperation
 from .models import *
 from django.views.generic.list import ListView
 from django.views import View
 from .forms import *
+from .moreviews import manageModules
+from django.core.exceptions import SuspiciousOperation
+
 
 # Create your views here.
 
@@ -77,23 +79,6 @@ def showModules(request, **kwargs):
 		'u_id': u_id,
 	}
 	return HttpResponse(template.render(context, request))
-"""
-def showComponents(request, **kwargs):
-	#
-	# 	components: a query component object in a certain module ordered by order attribute
-	#
-	#u_id = kwargs['user_id']
-	#c_id = kwargs['course_id']
-	m_id = kwargs['module_id']
-	template =loader.get_template("showComponents.html")
-	components = Component.objects.filter(module__id=m_id).values('component').order_by('order')
-	context = {
-		'components': components,
-	}
-	return HttpResponse(template.render(context, request))
-"""
-
-
 
 #	instructor manage course
 def enterModuleInfo(request, **kwargs):
@@ -146,17 +131,21 @@ def deleteModule(request, **kwargs):
 
 
 def showQuizzes(request, **kwargs):
-	all_quizzes = Quiz.objects.filter(course__id=kwargs['course_id'], module=None)
-	template = loader.get_template("showQuizzes.html")
-	context = {
-		'course': Course.objects.filter(id=kwargs['course_id'])[0],
-		'course_id': kwargs['course_id'],
-		'module': Module.objects.filter(id=kwargs['module_id'])[0],
-		'module_id': kwargs['module_id'],
-		'instructor_id': kwargs['instructor_id'],
-		'all_quizzes':all_quizzes,
-	}
-	return HttpResponse(template.render(context, request))
+	has_quiz = Quiz.objects.filter(module__id=kwargs['module_id'])
+	if(len(has_quiz)==0):
+		all_quizzes = Quiz.objects.filter(course__id=kwargs['course_id'], module=None)
+		template = loader.get_template("showQuizzes.html")
+		context = {
+			'course': Course.objects.filter(id=kwargs['course_id'])[0],
+			'course_id': kwargs['course_id'],
+			'module': Module.objects.filter(id=kwargs['module_id'])[0],
+			'module_id': kwargs['module_id'],
+			'instructor_id': kwargs['instructor_id'],
+			'all_quizzes':all_quizzes,
+		}
+		return HttpResponse(template.render(context, request))
+	else:
+		return manageModules.displayModuleContent(request, module_id=kwargs['module_id'], course_id=kwargs['course_id'], instructor_id=kwargs['instructor_id'])
 
 
 # 'manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addQuiz/<int:quiz_id>/'
@@ -166,8 +155,9 @@ def addQuiz(request, **kwargs):
 	quiz.module = module
 	quiz.save()
 
-	return manageModules.displayModuleContent(request, module_id=module.id, course_id=kwargs['course_id'], instructor_id=kwargs['instructor_id'])
-
+	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
+																		   kwargs['course_id'],
+																		   kwargs['module_id']))
 
 """
 class addModule(View):

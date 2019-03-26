@@ -40,12 +40,12 @@
 		<li>{{quiz}}</li>
 	{% else %}
 		<p>No quiz has been added to this module yet!</p>
+		<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/selectQuiz/">Add a Quiz</a><br>
 	{% endif %}
 
 <a href="{% url 'saveOrder' instructor.pk course.pk module.pk 'neworder' %}" hidden id="save"></a>
 
 <a href="{% url 'display_available_components' instructor.pk course.pk module.pk %}">Add a component</a><br>
-<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/selectQuiz/">Add a Quiz</a><br>
 <button id="btn" onclick="neworder()">save order</button><br>
 <a href="{% url 'showModules' instructor.pk course.pk %}">Back</a>
 {% endblock%}
