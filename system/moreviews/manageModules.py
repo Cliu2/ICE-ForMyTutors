@@ -38,13 +38,14 @@ def addComponent(request,**kwargs):
 	all_text_components=ComponentText.objects.filter(module__id=module_id)
 	all_image_components=ComponentImage.objects.filter(module__id=module_id)
 	quiz=Quiz.objects.filter(module__id=module_id)
-	all_components=[]
+	all_components=[None for i in range(len(all_text_components)+len(all_image_components))]
 	for t in all_text_components:
 		t.istext=True
-		all_components.append(t)
+		print(t.order)
+		all_components[t.order]=t
 	for i in all_image_components:
 		i.isimage=True
-		all_components.append(i)
+		all_components[i.order]=i
 
 	
 

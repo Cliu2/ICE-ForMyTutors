@@ -7,6 +7,8 @@
 		<li>{{component.title}}</li>
 		{% if component.istext %}
 			<li>{{component.content}}</li>
+		{% elif component.isimage %}
+			<li>{{component.path}}</li>
 		{% endif %}
 	{% endfor %}
 {% endblock%}
