@@ -10,10 +10,10 @@ urlpatterns = [
 
     # instructor editing mode
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
-    path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),                       # module list edit mode
-    #path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/',views.manageComponent, name='showComponent'),      # component list edit mode
-    #path('manage/<int:instructor_id>/<int:course_id>/<int: module>/quiz/', views.showQuizzes, name='showQuizzes'),    # add quiz view
-    #path('view/<int:instructor_id>/<int:course_id>/<int:module_id>/', views.viewQuiz, name='viewQuiz'),
+    path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),                       
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/deleteModule/', views.deleteModule, name="deleteModule"),
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/selectQuiz/', views.showQuizzes, name='showQuizzes'),    # add quiz view
+    path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addQuiz/<int:quiz_id>/', views.addQuiz, name="addQuiz"),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addComponent/',manageModules.selectComponent, name='display_available_components'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addComponent/<int:component_id>/',manageModules.addComponent, name='append_component'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/displayModuleContent/',manageModules.displayModuleContent,name='displayModuleContent'),

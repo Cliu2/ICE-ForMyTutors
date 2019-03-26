@@ -42,5 +42,6 @@
 	{% endif %}
 <a href="{% url 'display_available_components' instructor.pk course.pk module.pk %}">add more</a>
 <button id="btn" onclick="neworder()">save order</button>
-<a href="{% url 'saveOrder' instructor.pk course.pk module.pk 'neworder' %}" hidden id="save"></a>
+<a href="{% url 'saveOrder' instructor.pk course.pk module.pk 'neworder' %}" hidden id="save"></a><br>
+<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/selectQuiz/">Add a Quiz</a>
 {% endblock%}

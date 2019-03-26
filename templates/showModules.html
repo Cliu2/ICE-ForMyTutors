@@ -4,11 +4,10 @@
 		<title>Course Content</title>
 </head>
 <body>
-	<h2>{{course.title}}</h2>
 	<ul>
 		{% if type == "instructor" %}
     	{% for module in modules %}
-        <li><a href="{{module.id}}/">{{ module.title }}</a></li>
+        <li><a href="/system/manage/{{u_id}}/{{course.id}}/{{module.id}}/displayModuleContent/">{{ module.title }}</a></li>
     	{% endfor %}
 			<button><a href="/system/manage/{{u_id}}/{{course.id}}/requestAdd/">Add Module</a></button>
 		{% else %}

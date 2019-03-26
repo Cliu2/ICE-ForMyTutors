@@ -103,11 +103,66 @@ def enterModuleInfo(request, **kwargs):
 
 
 def addModule(request, **kwargs):
-	msg = request.POST
+	msg = request.GET
 	m_title = msg['title']
 	course = Course.objects.filter(id=msg['c_id'])[0]
 	order = msg['order']
-	#module = Module(course=)
+	module = Module(course=course, order=order, title=m_title)
+	module.save()
+
+	i_id = kwargs['instructor_id']
+	c_id = kwargs['course_id']
+	template = loader.get_template("showModules.html")
+	instructor = Instructor.objects.filter(id=i_id)[0]
+	course = Course.objects.filter(id=c_id)[0]
+	modules = Module.objects.filter(course__id=c_id).order_by('order')
+	progress = -1
+	context = {
+		'course': course,
+		'modules': modules,
+		'type': 'instructor',
+		'progress': progress,
+		'u_id': i_id,
+	}
+	return HttpResponse(template.render(context, request))
+
+def deleteModule(request, **kwargs):
+	template = loader.get_template("showModules.html")
+	Module.objects.filter(id=kwargs['module_id']).delete()
+	modules = Module.objects.filter(course__id=kwargs['course_id']).order_by('order')
+	context = {
+		'course': Course.objects.filter(id=kwargs['course_id'])[0],
+		'modules': modules,
+		'type': 'instructor',
+		'progress': -1,
+		'u_id': kwargs['instructor_id'],
+	}
+	return HttpResponse(template.render(context, request))
+
+
+def showQuizzes(request, **kwargs):
+	all_quizzes = Quiz.objects.filter(course__id=kwargs['course_id'], module=None)
+	template = loader.get_template("showQuizzes.html")
+	context = {
+		'course': Course.objects.filter(id=kwargs['course_id'])[0],
+		'course_id': kwargs['course_id'],
+		'module': Module.objects.filter(id=kwargs['module_id'])[0],
+		'module_id': kwargs['module_id'],
+		'instructor_id': kwargs['instructor_id'],
+		'all_quizzes':all_quizzes,
+	}
+	return HttpResponse(template.render(context, request))
+
+
+# 'manage/<int:instructor_id>/<int:course_id>/<int:module_id>/addQuiz/<int:quiz_id>/'
+def addQuiz(request, **kwargs):
+	quiz = Quiz.objects.filter(id=kwargs['quiz_id'])[0]
+	module = Module.objects.filter(id=kwargs['module_id'])[0]
+	quiz.module = module
+	quiz.save()
+
+	return manageModules.displayModuleContent(request, module_id=module.id, course_id=kwargs['course_id'], instructor_id=kwargs['instructor_id'])
+
 
 """
 class addModule(View):
