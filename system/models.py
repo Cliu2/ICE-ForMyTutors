@@ -70,7 +70,7 @@ class Component(models.Model):
 class ComponentImage(Component):
 	path=models.CharField(max_length=200)
 	def getHTML(self):
-		return "<img src="+self.path+"  alt="+self.title+" />"
+		return "<img src="+self.path+"  alt=\""+self.title+"\" />"
 
 class ComponentText(Component):
 	content=models.TextField()
