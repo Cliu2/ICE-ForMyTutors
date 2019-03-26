@@ -107,11 +107,14 @@ def saveOrder(request,**kwargs):
 	new_orders=[int(x) for x in new_orders]
 	components=Component.objects.filter(module__id=kwargs['module_id'])
 	all_components=[None for i in range(len(components))]
-	for t in components:
-		all_components[t.order]=t
+	for c in components:
+		all_components[c.order]=c
 	for i in range(len(all_components)):
 		component=all_components[i]
-		component.setOrder(new_orders[i]-1)
+		indexToSet=new_orders.index(component.pk)
+		# print(component)
+		# print("new index:",indexToSet)
+		component.setOrder(indexToSet)
 
 	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
 																		   kwargs['course_id'],
