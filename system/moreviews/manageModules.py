@@ -73,6 +73,7 @@ def addComponent(request,**kwargs):
 def displayModuleContent(request, **kwargs):
 	module_id=kwargs['module_id']
 	module=Module.objects.get(id=module_id)
+	course=Course.objects.get(id=kwargs['course_id'])
 	all_text_components=ComponentText.objects.filter(module__id=module_id)
 	all_image_components=ComponentImage.objects.filter(module__id=module_id)
 	quiz=Quiz.objects.filter(module__id=module_id)
@@ -83,7 +84,10 @@ def displayModuleContent(request, **kwargs):
 	for i in all_image_components:
 		i.isimage=True
 		all_components[i.order]=i
-
+	len_quiz=quiz.count()
+	if len_quiz>0:
+		quiz=quiz[0]
+		
 	template=loader.get_template("moduleContent.html")
 	context={'components':all_components,
 			 'quiz':quiz,
