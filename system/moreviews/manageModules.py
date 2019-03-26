@@ -29,6 +29,7 @@ def selectComponent(request,**kwargs):
 
 def addComponent(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])
+	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
 	module_id=kwargs['module_id']
 	component_id=kwargs['component_id']
 	component=Component.objects.get(id=component_id)
@@ -63,7 +64,7 @@ def addComponent(request,**kwargs):
 			 'len_component':len(all_components),
 			 'quiz':quiz,
 			 'len_quiz':len_quiz,
-			 'instructor_id':kwargs['instructor_id'],
+			 'instructor':instructor,
 			 'course':course,
 			 'module':module
 			 }
