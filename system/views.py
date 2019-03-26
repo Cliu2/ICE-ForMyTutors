@@ -25,16 +25,16 @@ def viewEnrolled(request, **kwargs):
 		users = Learner.objects.filter(id=user_id)
 		type = 'learner'
 		course_id_list = Enrolment.objects.filter(learner__id=user_id).order_by('status').values('course')
+		# [{'course':1},{'course':3},{'course':4}] -> course model list
 		courses = []
 		for course in course_id_list:
 			courses.append(Course.objects.filter(id = course['course'])[0])
 		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 
 	else:
-		user = users[0]
 		type = 'instructor'
 		courses = Course.objects.filter(instructor__id=user_id).order_by('status')
-		status = Enrolment.objects.filter(learner__id=user_id).values('status')
+		status = 0
 	context = {
 		'user': users,
 		'course_list': courses,
@@ -145,16 +145,49 @@ def submitAnswer(request, **kwargs):
 """
 	instructor manage course
 """
-
-def manageModule(request, **kwargs):
-	u_id = kwargs['instructor_id']
+def modiModuleOrd(request,**kwargs):
 	c_id = kwargs['course_id']
+	m_id = kwargs['module_id']
+	template =loader.get_template("modiModuleOrd.html")
 	modules = Module.objects.filter(course__id=c_id).order_by('order')
-	template = loader.get_template("manageModule.html")
+	module = Module.objects.filter(id=m_id)[0]
+	ex_module = modules.exclude(id=m_id)
+	largest_order_mod=ex_module.order_by('-order')[0]
 	context = {
-		'modules': modules,
+		'ex_module': ex_module,
+		'modules': largest_order_mod,
+		'module' : module,
 	}
 	return HttpResponse(template.render(context, request))
+
+def moduleOrder(request,**kwargs):
+	res = request.GET 
+	
+	c_id = kwargs['course_id']
+	template =loader.get_template("moduleOrder.html")
+	modules = Module.objects.filter(course__id=c_id).order_by('order')
+	moduleList = []
+	if res['choice'] == 'last':
+		for module in modules:
+			if module.id != int(res['exclu']):
+				moduleList.append(module.id)
+			moduleList.append(int(res['exclu']))
+	else:
+		for module in modules:	
+			if module.id != int(res['exclu']):
+				if module.id == int(res['choice']):
+					moduleList.append(int(res['exclu']))
+				moduleList.append(module.id)
+	for i ,m in enumerate(moduleList):
+		Module.objects.filter(id = m).update(order = i)
+	context = {
+	}
+	return HttpResponse(template.render(context, request))
+	
+		
+
+def manageModule(request, **kwargs):
+	pass
 
 
 def selectComponent(request, **kwargs):

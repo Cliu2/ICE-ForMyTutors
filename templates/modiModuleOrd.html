@@ -1,0 +1,42 @@
+{% block title %}This is the page: modiModuleOrd.html{% endblock %}
+
+{% block content %}
+	<ul>
+    <h5>
+        ex_module: {{ ex_module }} <br >
+        modules: {{ modules }} <br >  
+        module: {{ module }} <br >
+    </h5>
+{% endblock %}
+
+
+<div class="row">
+        <form action="moduleOrder" method="get" id="question">
+            
+            <!-- REQUIRED QUESTION -->
+            <h4>Please select the space you want to insert module in:</h4>
+            <!-- END OF REQUIRED QUESTION --> 
+            <!-- CHOICES -->
+            {% for mod in ex_module %}
+                <label for="choice">
+                    <input type="radio" name="choice" value={{ mod.pk }} />&nbsp;before {{ mod.title }}<br/>
+                </label>
+                {% if mod == modules %}
+                <label for="choice">
+                    <input type="radio" name="choice" value="last" />&nbsp;after {{ mod.title }}<br/>
+                </label>
+                {% endif %}
+            {% endfor %}
+            <label for="choice">
+                    <input type="hidden" name="exclu" value={{ module.pk }} />
+                </label>
+            <input type="submit" class="blue button" value="Send" />
+        </form>
+    </div>
+{% for ex in ex_module %}
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<-----  </p>
+<h4>{{ ex.title }}<br ></h4>
+{% endfor %}
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<-----  </p>
+
+</ul>

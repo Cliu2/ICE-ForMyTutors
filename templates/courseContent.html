@@ -20,7 +20,8 @@
     {% else %}
         {% for module in modules %}
             <p>{{ module.title }}    
-                <a href = "./{{ module.pk }}/" > open </a>
+                <a href = "./{{ module.pk }}/" > open </a> &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href = "./{{ module.pk }}/modiModuleOrd/">set order</a>
             </p>
         {% endfor %}
         <!-- create button not implemented -->
