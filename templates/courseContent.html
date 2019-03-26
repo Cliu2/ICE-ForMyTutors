@@ -8,5 +8,22 @@
         type: {{ type }}<br >
         progress: {{ progress }}<br >
     </h5>
+    <h1>{{ course.title }}</h1>
+    {% if type == 'learner' %}
+        {% for module in modules %}
+            <p>{{ module.title }}   
+                {%  if module.order <= progress %}
+                <a href = "./{{ module.pk }}/" > open </a>
+                {% endif %}
+            </p>
+        {% endfor %}
+    {% else %}
+        {% for module in modules %}
+            <p>{{ module.title }}    
+                <a href = "./{{ module.pk }}/" > open </a>
+            </p>
+        {% endfor %}
+        <!-- create button not implemented -->
+    {% endif %}
 	</ul>
 {% endblock %}

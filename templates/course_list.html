@@ -1,4 +1,4 @@
-{% block title %}This is the page: showCourses.html{% endblock %}
+{% block title %}This is the page: course_list.html{% endblock %}
 
 {% block content %}
 	<ul>
@@ -7,6 +7,20 @@
         type: {{ type }}<br >
         course_list: {{ course_list }}<br >
         status: {{ status }}
+        
     </h5>
+    {% if type == 'learner' %}
+        {% for course in course_list %}
+            <p>{{ course.title }}   <a href = "./{{ course.pk }}/" > open </a></p>
+        {% endfor %}
+    {% else %}
+        {% for course in course_list %}
+            <p>{{ course.title }}    <a href = "./{{ course.pk }}/" > open </a></p>
+        {% endfor %}
+
+        <!-- create button not implemented -->
+    {% endif %}
+
+
 	</ul>
 {% endblock %}

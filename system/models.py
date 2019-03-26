@@ -55,13 +55,28 @@ class Component(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	def setOrder(self,order):
 		self.order = order
+	@property
+	def getHTML(self):
+		text = ComponentText.objects.filter(id = self.id)
+		if len(text)!=0:
+			return text[0].getHTML()
+		else:
+			image = ComponentImage.objects.filter(id = self.id)
+			return image[0].getHTML
+
+		
 
 
 class ComponentImage(Component):
 	path=models.CharField(max_length=200)
+	def getHTML(self):
+		return "<img src="+self.path+"  alt="+self.title+" />"
 
 class ComponentText(Component):
 	content=models.TextField()
+	def getHTML(self):
+		return "<p>"+self.content+"</p>"
+
 
 class Quiz(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)

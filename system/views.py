@@ -24,17 +24,20 @@ def viewEnrolled(request, **kwargs):
 	if len(users)==0:
 		users = Learner.objects.filter(id=user_id)
 		type = 'learner'
-		course_list = Enrolment.objects.filter(learner__id=user_id).order_by('status').values('course')
+		course_id_list = Enrolment.objects.filter(learner__id=user_id).order_by('status').values('course')
+		courses = []
+		for course in course_id_list:
+			courses.append(Course.objects.filter(id = course['course'])[0])
 		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 
 	else:
 		user = users[0]
 		type = 'instructor'
-		course_list = Course.objects.filter(instructor__id=user_id)
+		courses = Course.objects.filter(instructor__id=user_id).order_by('status')
 		status = Enrolment.objects.filter(learner__id=user_id).values('status')
 	context = {
 		'user': users,
-		'course_list': course_list,
+		'course_list': courses,
 		'type': type,
 		'status': status,
 
@@ -53,14 +56,13 @@ def viewCourse(request, **kwargs):
 	c_id = kwargs['course_id']
 	template = loader.get_template("courseContent.html")
 	users = Instructor.objects.filter(id=u_id)
+	course = Course.objects.filter(id=c_id)[0]
 	if len(users)==0:
 		type = 'learner'
-		course = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('course')[0]
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
-		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
+		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
 	else:
 		type = 'instructor'
-		course = Course.objects.filter(instructor__id=u_id)
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
 		progress = -1
 	context = {
@@ -82,9 +84,10 @@ def viewModule(request, **kwargs):
 	module = Module.objects.filter(id= m_id)[0]
 	users = Instructor.objects.filter(id=u_id)  
 	components = Component.objects.filter(module__id=m_id).order_by('order')
+	componentURL = components
 	if len(users) == 0:
 		type = 'learner'
-		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
+		progress = Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
 	else:
 		type = 'instructor'
 		progress = -1

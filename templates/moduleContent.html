@@ -7,6 +7,23 @@
         module: {{ module }}<br >
         type: {{ type }}<br >
         progress: {{ progress }}<br >
-    </h5>
+	</h5>
+	<h1>{{ module.title }}</h1>
+    {% if type == 'learner' %}
+        {% for component in components %}
+        {{ component.getHTML | safe}}
+        {% endfor %}
+    {% else %}
+		{% for component in components %}
+			<h5>{{ component.title }}    
+            </h5>
+            {{ component.getHTML | safe}}    
+			<p>created at: {{ component.create_at }}  
+			</p>
+			<p>last update: {{ component.update_at }} 
+			</p>
+        {% endfor %}
+        <!-- create/setOrder button not implemented -->
+    {% endif %}
 	</ul>
 {% endblock %}
