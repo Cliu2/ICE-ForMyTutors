@@ -1,18 +1,94 @@
-{% extends 'title.html' %}
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		var node = document.querySelector("#container");
+		var btn=document.querySelector("#btn");
+		var draging = null;
+		//使用事件委托，将li的事件委托给ul
+		node.ondragstart = function(event) {
+		        // console.log("start");
+		  			//firefox设置了setData后元素才能拖动！！！！
+		        event.dataTransfer.setData("te", event.target.innerText); //不能使用text，firefox会打开新tab
+		        //event.dataTransfer.setData("self", event.target);
+		        draging = event.target;
+		        console.log(event);
+		    }
+		node.ondragover = function(event) {
+		        //console.log("onDrop over");
+		        event.preventDefault();
+		        var target = event.target;
+		  			//因为dragover会发生在ul上，所以要判断是不是li
+		        if (target.nodeName === "LI"&&target !== draging) {
+		                if (_index(draging) < _index(target)) {
+		                    target.parentNode.insertBefore(draging,target.nextSibling);
+		                } else {
+		                    target.parentNode.insertBefore(draging, target);
+		                }
+		        }
+		    }
+			//获取元素在父元素中的index
+		  function _index(el) {
+		        var index = 0;
 
+		        if (!el || !el.parentNode) {
+		            return -1;
+		        }
+
+		        while (el && (el = el.previousElementSibling)) {
+		            //console.log(el);
+		            index++;
+		        }
+
+		        return index;
+		    }
+
+		    btn.onclick=function(){
+		    	var neworder="";
+		    	for (let child of node.children){
+		    		neworder+=String(child.id)+"-";
+		    	}
+		    	neworder=neworder.slice(0,-1);
+		    	var link=document.querySelector("#save");
+		    	newhref=link.href.replace('neworder',neworder);
+		    	console.log(newhref);
+
+		    	$("#save").attr("href",newhref);
+		    	link.click();
+		    }
+
+		    })
+	</script>
+	<style type="text/css">
+		.drag {
+	        width: 100%;
+	        height: 40px;
+	        border: 1px solid #999;
+	        background: #EA6E59;
+	        margin-top: 2px;
+	        border-radius: 10px;
+	        padding-left: 10px;
+	        color: white;
+	        cursor: move;
+	    }
+	</style>
+
+</head>
+{% extends 'title.html' %}
 {% block content %}
 	{% if len_component > 0 %}
-	<ul id="contianer"></ul>
+	<ul id="container">
 		{% for component in components %}
-			<li draggable="true">
+			<li draggable="true" class="drag" id="{{component.pk}}">
 				<p>{{component.title}}</p>
-				{% if component.istext %}
+				<!-- {% if component.istext %}
 					<p>{{component.content}}</p>
 				{% elif component.isimage %}
 					<p>{{component.path}}</p>
-				{% endif %}
+				{% endif %} -->
 			</li>
 		{% endfor %}
+	</ul>
 	{% else %}
 		<p>No component has been added to this module yet!</p>
 	{% endif %}
@@ -21,6 +97,7 @@
 	{% else %}
 		<p>No quiz has been added to this module yet!</p>
 	{% endif %}
+<a href="{% url 'display_available_components' instructor.pk course.pk module.pk %}">add more</a>
+<button id="btn">save order</button>
+<a href="{% url 'saveOrder' instructor.pk course.pk module.pk 'neworder' %}" hidden id="save"></a>
 {% endblock%}
-
-<a href="{% url 'display_available_components' instructor_id course.pk module.pk %}">add more</a>

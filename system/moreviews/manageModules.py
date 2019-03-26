@@ -1,6 +1,7 @@
 import sys
 sys.path.append("..")
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.urls import reverse
 from django.http import HttpResponse
 from django.template import loader
 from django.views.generic import TemplateView
@@ -74,6 +75,7 @@ def displayModuleContent(request, **kwargs):
 	module_id=kwargs['module_id']
 	module=Module.objects.get(id=module_id)
 	course=Course.objects.get(id=kwargs['course_id'])
+	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
 	all_text_components=ComponentText.objects.filter(module__id=module_id)
 	all_image_components=ComponentImage.objects.filter(module__id=module_id)
 	quiz=Quiz.objects.filter(module__id=module_id)
@@ -87,12 +89,30 @@ def displayModuleContent(request, **kwargs):
 	len_quiz=quiz.count()
 	if len_quiz>0:
 		quiz=quiz[0]
-		
+
 	template=loader.get_template("moduleContent.html")
 	context={'components':all_components,
+			 'len_component':len(all_components),
 			 'quiz':quiz,
-			 'instructor_id':kwargs['instructor_id'],
+			 'len_quiz':len_quiz,
+			 'instructor':instructor,
 			 'course':course,
 			 'module':module
 			 }
 	return HttpResponse(template.render(context,request))
+
+def saveOrder(request,**kwargs):
+	neworder=kwargs['neworder']
+	new_orders=neworder.split('-')
+	new_orders=[int(x) for x in new_orders]
+	components=Component.objects.filter(module__id=kwargs['module_id'])
+	all_components=[None for i in range(len(components))]
+	for t in components:
+		all_components[t.order]=t
+	for i in range(len(all_components)):
+		component=all_components[i]
+		component.setOrder(new_orders[i]-1)
+
+	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
+																		   kwargs['course_id'],
+																		   kwargs['module_id']))
