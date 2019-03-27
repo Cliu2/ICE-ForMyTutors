@@ -83,11 +83,12 @@ def showModules(request, **kwargs):
 #	instructor manage course
 def enterModuleInfo(request, **kwargs):
  	template = loader.get_template("enterModuleInfo.html")
- 	order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
+	#modules = Module.objects.filter(course__id=kwargs['course_id'])
+ 	#order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
  	context = {
  		'i_id': kwargs['instructor_id'],
  		'c_id': kwargs['course_id'],
- 		'order': order,
+ 		'order': 0,
  	}
  	return HttpResponse(template.render(context, request))
 
