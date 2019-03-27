@@ -1,13 +1,7 @@
-{% block title %}This is the page: courseContent.html{% endblock %}
+
 
 {% block content %}
 	<ul>
-    <h5> 
-        course: {{ course }}<br >
-        module: {{ modules }}<br >
-        type: {{ type }}<br >
-        progress: {{ progress }}<br >
-    </h5>
     <h1>{{ course.title }}</h1>
     {% if type == 'learner' %}
         {% for module in modules %}

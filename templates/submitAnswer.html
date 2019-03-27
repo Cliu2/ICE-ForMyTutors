@@ -1,11 +1,7 @@
-{% block title %}This is the page: submitAnswer.html{% endblock %}
+
 
 {% block content %}
 	<ul>
-    <h5> 
-        submitted: {{ submitted }}<br >
-        pass: {{ pass }}
-    </h5>
     {% if pass == 'pass' %}
     <h3> Congratulations! You may enter the next module!</h3>
     {% else %}

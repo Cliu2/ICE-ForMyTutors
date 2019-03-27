@@ -1,14 +1,7 @@
-{% block title %}This is the page: course_list.html{% endblock %}
+
 
 {% block content %}
 	<ul>
-	<h5> 
-        user: {{ user }} <br >
-        type: {{ type }}<br >
-        course_list: {{ course_list }}<br >
-        status: {{ status }}
-        
-    </h5>
     {% if type == 'learner' %}
         {% for course in course_list %}
             <p>{{ course.title }}   <a href = "./{{ course.pk }}/" > open </a></p>

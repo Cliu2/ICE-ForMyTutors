@@ -170,7 +170,7 @@ def moduleOrder(request,**kwargs):
 		for module in modules:
 			if module.id != int(res['exclu']):
 				moduleList.append(module.id)
-			moduleList.append(int(res['exclu']))
+		moduleList.append(int(res['exclu']))
 	else:
 		for module in modules:	
 			if module.id != int(res['exclu']):
@@ -212,7 +212,7 @@ def compOrder(request, **kwargs):
 		for component in components:
 			if component.id != int(res['exclu']):
 				compList.append(component.id)
-			compList.append(int(res['exclu']))
+		compList.append(int(res['exclu']))
 	else:
 		for component in components:	
 			if component.id != int(res['exclu']):
