@@ -37,7 +37,9 @@
 		<p>No component has been added to this module yet!</p>
 	{% endif %}
 	{% if len_quiz > 0 %}
-		<li>{{quiz}}</li>
+		<li>{{quiz}}
+			<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/{{quiz.id}}/removeQuiz/">Remove Quiz</a><br>
+		</li>
 	{% else %}
 		<p>No quiz has been added to this module yet!</p>
 		<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/selectQuiz/">Add a Quiz</a><br>

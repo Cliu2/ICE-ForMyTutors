@@ -129,6 +129,14 @@ def deleteModule(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
+def removeQuiz(request, **kwargs):
+	quiz = Quiz.objects.get(id=kwargs['quiz_id'])
+	quiz.module = None
+	quiz.save()
+	components = Component.objects.filter(module__id=kwargs['module_id']).order_by('order')
+	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
+																			kwargs['course_id'],
+																			kwargs['module_id']))
 
 def showQuizzes(request, **kwargs):
 	has_quiz = Quiz.objects.filter(module__id=kwargs['module_id'])
