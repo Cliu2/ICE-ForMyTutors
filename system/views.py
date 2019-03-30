@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.generic import TemplateView
 from .models import *
@@ -93,7 +93,7 @@ def enterModuleInfo(request, **kwargs):
  	return HttpResponse(template.render(context, request))
 
 
-def addModule(request, **kwargs):
+def addModule2(request, **kwargs):
 	msg = request.GET
 	m_title = msg['title']
 	course = Course.objects.filter(id=msg['c_id'])[0]
@@ -116,6 +116,24 @@ def addModule(request, **kwargs):
 		'u_id': i_id,
 	}
 	return HttpResponse(template.render(context, request))
+
+def addModule(request, **kwargs):
+	title = request.GET.get('title', None)
+	course = Course.objects.filter(id=request.GET.get('c_id', None))[0]
+	if len(Module.objects.filter(course__id=course.id))==0:
+		order = 0
+	else:
+		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']
+	module = Module(course=course, order=order, title=title)
+	module.save()
+	url = '/system/manage/{}/{}/{}/displayModuleContent/'.format(request.GET.get('i_id', None),
+																	 course.id,
+																	 module.id)
+	context = {
+		'title': title,
+		'url': url,
+	}
+	return JsonResponse(context)
 
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
