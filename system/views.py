@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.generic import TemplateView
 from .models import *
@@ -83,16 +83,17 @@ def showModules(request, **kwargs):
 #	instructor manage course
 def enterModuleInfo(request, **kwargs):
  	template = loader.get_template("enterModuleInfo.html")
- 	order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
+	#modules = Module.objects.filter(course__id=kwargs['course_id'])
+ 	#order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
  	context = {
  		'i_id': kwargs['instructor_id'],
  		'c_id': kwargs['course_id'],
- 		'order': order,
+ 		'order': 0,
  	}
  	return HttpResponse(template.render(context, request))
 
 
-def addModule(request, **kwargs):
+def addModule2(request, **kwargs):
 	msg = request.GET
 	m_title = msg['title']
 	course = Course.objects.filter(id=msg['c_id'])[0]
@@ -116,6 +117,24 @@ def addModule(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
+def addModule(request, **kwargs):
+	title = request.GET.get('title', None)
+	course = Course.objects.filter(id=request.GET.get('c_id', None))[0]
+	if len(Module.objects.filter(course__id=course.id))==0:
+		order = 0
+	else:
+		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']
+	module = Module(course=course, order=order, title=title)
+	module.save()
+	url = '/system/manage/{}/{}/{}/displayModuleContent/'.format(request.GET.get('i_id', None),
+																	 course.id,
+																	 module.id)
+	context = {
+		'title': title,
+		'url': url,
+	}
+	return JsonResponse(context)
+
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
 	Module.objects.filter(id=kwargs['module_id']).delete()
@@ -129,6 +148,14 @@ def deleteModule(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
+def removeQuiz(request, **kwargs):
+	quiz = Quiz.objects.get(id=kwargs['quiz_id'])
+	quiz.module = None
+	quiz.save()
+	components = Component.objects.filter(module__id=kwargs['module_id']).order_by('order')
+	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
+																			kwargs['course_id'],
+																			kwargs['module_id']))
 
 def showQuizzes(request, **kwargs):
 	has_quiz = Quiz.objects.filter(module__id=kwargs['module_id'])
