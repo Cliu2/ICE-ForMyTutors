@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .moreviews import manageModules,studyModule
+from .moreviews import manageModules, studyModule
 
 urlpatterns = [
     # both users

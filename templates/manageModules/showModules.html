@@ -2,32 +2,38 @@
 <html>
 <head>
 		<title>Course Content</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="/static/create_module.js"></script>
 </head>
 
 <body>
 	{% extends 'title.html' %}
 	{% block content %}
 	<div id="module_list">
-	<ul>
 		{% if type == "instructor" %}
+		<ul>
     	{% for module in modules %}
         <li><a href="/system/manage/{{u_id}}/{{course.id}}/{{module.id}}/displayModuleContent/">{{ module.title }}</a></li>
 
 					<a href="/system/manage/{{u_id}}/{{course.id}}/{{module.id}}/deleteModule/"> remove </a>
 
     	{% endfor %}
-			<!--		<button><a href="/system/manage/{{u_id}}/{{course.id}}/requestAdd/">Add Module</a></button>		-->
-
+		</ul>
 			<button id="create_module" data-uid="{{u_id}}" data-courseID="{{course.id}}">Add Module</button>
 			<form id="module_info"></form>
 
-	</ul>
-	</div>
-		{% else %}
-		<p>Learner</p>
+		{% else %}	<!-- user type is learner -->
+			<ul>
+				{% for module in modules %}
+					{% if module.order <= progress %}
+						<li data-accessible="open"><a href="/system/view/{{u_id}}/{{course.id}}/{{module.id}}/">{{module}}</a></li>
+					{% else %}
+						<li data-accessible="close"><a href="/system/view/{{u_id}}/{{course.id}}/{{module.id}}/">{{module}}</a></li>
+					{% endif %}
+				{% endfor %}
+			</ul>
 		{% endif %}
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="/static/create_module.js"></script>
+	</div>
 	{% endblock %}
 </body>
 </html>

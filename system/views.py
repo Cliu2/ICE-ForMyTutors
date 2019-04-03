@@ -8,7 +8,7 @@ from django.views import View
 from .forms import *
 from .moreviews import manageModules
 from django.core.exceptions import SuspiciousOperation
-
+import itertools
 
 # Create your views here.
 
@@ -29,16 +29,14 @@ def showCourses(request, **kwargs):
 	if len(users)==0:
 		type = 'learner'
 		user = Learner.objects.filter(id=user_id)[0]
-		course_list = Enroll.objects.filter(learner__id=user_id).values('course')
-		status = Enroll.objects.filter(learner__id=user_id).values('status')[0]
+		course_list = list(enroll.course for enroll in Enroll.objects.filter(learner__id=user_id).order_by('status'))
+		status = list(enroll.status for enroll in Enroll.objects.filter(learner__id=user_id).order_by('status'))
 
 	else:
 		user = users[0]
 		type = 'instructor'
-		course_list = Course.objects.filter(instructor__id=user_id)
-		status=None
-		if course_list.count()>0:
-			status = course_list.values('status')[0]
+		course_list = list(Course.objects.filter(instructor__id=user_id).order_by('status'))
+		status = list(c.status for c in Course.objects.filter(instructor__id=user_id).order_by('status'))
 	context = {
 		'course_list': course_list,
 		'type': type,
@@ -61,9 +59,10 @@ def showModules(request, **kwargs):
 	users = Instructor.objects.filter(id=u_id)
 	if len(users)==0:
 		type = 'learner'
-		course = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('course')[0]
+		course = Course.objects.filter(id=c_id)[0]
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
-		progress = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]
+		progress = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
+
 	else:
 		type = 'instructor'
 		course = Course.objects.filter(id=c_id)[0]

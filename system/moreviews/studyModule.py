@@ -3,7 +3,7 @@ sys.path.append("..")
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from ..models import *
+from system.models import *
 from django.views.generic.list import ListView
 
 # Create your views here.
@@ -13,13 +13,13 @@ from django.views.generic.list import ListView
 """
 
 def viewEnrolled(request, **kwargs):
-	# 	
+	#
 	#	Design Model 1: viewEnrolled(user_id)
 	# 	type: determines learner page/instructor page
 	# 	course_list: query course object enrolled by user/created by instructor, ordered by status
-	# 	status: query object might determine display or not, or the order to display 
+	# 	status: query object might determine display or not, or the order to display
 	# 	user: the user exactly
-	# 
+	#
 	user_id = kwargs['user_id']
 	users = Instructor.objects.filter(id=user_id)
 	template = loader.get_template("course_list.html")
@@ -48,12 +48,12 @@ def viewEnrolled(request, **kwargs):
 
 
 def viewCourse(request, **kwargs):
-	# 
+	#
 	# 	type: determines learner page/ instructor page
 	# 	course: a certain course enrolled by user/created by instructor that has entered
 	# 	modules: with the 'order' attribute to determine the order of display
 	# 	progress: start with 0? then progress = -1 for instructor as a dumplicate attribute, control the access of modules
-	# 
+	#
 	u_id = kwargs['user_id']
 	c_id = kwargs['course_id']
 	template = loader.get_template("courseContent.html")
@@ -76,15 +76,15 @@ def viewCourse(request, **kwargs):
 	return HttpResponse(template.render(context, request))
 
 def viewModule(request, **kwargs):
-	# 
+	#
 	# 	components: a query component object in a certain module ordered by order attribute
-	# 
+	#
 	u_id = kwargs['user_id']
 	c_id = kwargs['course_id']
 	m_id = kwargs['module_id']
-	template =loader.get_template("moduleContent.html")
+	template =loader.get_template("learnerModuleContent.html")
 	module = Module.objects.filter(id= m_id)[0]
-	users = Instructor.objects.filter(id=u_id)  
+	users = Instructor.objects.filter(id=u_id)
 	components = Component.objects.filter(module__id=m_id).order_by('order')
 	componentURL = components
 	if len(users) == 0:
@@ -114,7 +114,7 @@ def takeQuiz(request, **kwargs):
 	return HttpResponse(template.render(context, request))
 
 def RepresentsInt(s):
-    try: 
+    try:
         int(s)
         return True
     except ValueError:
@@ -163,7 +163,7 @@ def modiModuleOrd(request,**kwargs):
 	return HttpResponse(template.render(context, request))
 
 def moduleOrder(request,**kwargs):
-	res = request.GET 
+	res = request.GET
 	c_id = kwargs['course_id']
 	template =loader.get_template("moduleOrder.html")
 	modules = Module.objects.filter(course__id=c_id).order_by('order')
@@ -174,7 +174,7 @@ def moduleOrder(request,**kwargs):
 				moduleList.append(module.id)
 			moduleList.append(int(res['exclu']))
 	else:
-		for module in modules:	
+		for module in modules:
 			if module.id != int(res['exclu']):
 				if module.id == int(res['choice']):
 					moduleList.append(int(res['exclu']))
@@ -184,7 +184,7 @@ def moduleOrder(request,**kwargs):
 	context = {
 	}
 	return HttpResponse(template.render(context, request))
-	
+
 def modiCompOrd(request, **kwargs):
 	m_id = kwargs['module_id']
 	comp_id = kwargs['component_id']
@@ -192,7 +192,7 @@ def modiCompOrd(request, **kwargs):
 	components = Component.objects.filter(module__id=m_id).order_by('order')
 	component = Component.objects.filter(id=comp_id)[0]
 	ex_component = components.exclude(id=comp_id)
-	largest_order_comp=ex_component.order_by('-order')[0]	
+	largest_order_comp=ex_component.order_by('-order')[0]
 	context = {
 		'ex_component': ex_component,
 		'components': largest_order_comp,
@@ -205,7 +205,7 @@ def modiCompOrd(request, **kwargs):
 
 
 def compOrder(request, **kwargs):
-	res = request.GET 
+	res = request.GET
 	m_id = kwargs['module_id']
 	template =loader.get_template("compOrder.html")
 	components = Component.objects.filter(module__id=m_id).order_by('order')
@@ -216,7 +216,7 @@ def compOrder(request, **kwargs):
 				compList.append(component.id)
 			compList.append(int(res['exclu']))
 	else:
-		for component in components:	
+		for component in components:
 			if component.id != int(res['exclu']):
 				if component.id == int(res['choice']):
 					compList.append(int(res['exclu']))
