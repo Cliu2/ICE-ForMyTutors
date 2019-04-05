@@ -1,6 +1,7 @@
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="/static/Drag_Drop_Ordering.js"></script>
+	<script src="/static/addComponent.js"></script>
 	<style type="text/css">
 		.drag {
 	        width: 100%;
@@ -48,6 +49,8 @@
 <a href="{% url 'saveOrder' instructor.pk course.pk module.pk 'neworder' %}" hidden id="save"></a>
 
 <a href="{% url 'display_available_components' instructor.pk course.pk module.pk %}">Add a component</a><br>
+
+<div id="available_components"></div>
 <button id="btn" onclick="neworder()">save order</button><br>
 <a href="{% url 'showModules' instructor.pk course.pk %}">Back</a>
 {% endblock%}

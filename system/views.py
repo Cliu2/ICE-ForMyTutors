@@ -79,43 +79,6 @@ def showModules(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
-#	instructor manage course
-def enterModuleInfo(request, **kwargs):
- 	template = loader.get_template("enterModuleInfo.html")
-	#modules = Module.objects.filter(course__id=kwargs['course_id'])
- 	#order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
- 	context = {
- 		'i_id': kwargs['instructor_id'],
- 		'c_id': kwargs['course_id'],
- 		'order': 0,
- 	}
- 	return HttpResponse(template.render(context, request))
-
-
-def addModule2(request, **kwargs):
-	msg = request.GET
-	m_title = msg['title']
-	course = Course.objects.filter(id=msg['c_id'])[0]
-	order = msg['order']
-	module = Module(course=course, order=order, title=m_title)
-	module.save()
-
-	i_id = kwargs['instructor_id']
-	c_id = kwargs['course_id']
-	template = loader.get_template("showModules.html")
-	instructor = Instructor.objects.filter(id=i_id)[0]
-	course = Course.objects.filter(id=c_id)[0]
-	modules = Module.objects.filter(course__id=c_id).order_by('order')
-	progress = -1
-	context = {
-		'course': course,
-		'modules': modules,
-		'type': 'instructor',
-		'progress': progress,
-		'u_id': i_id,
-	}
-	return HttpResponse(template.render(context, request))
-
 def addModule(request, **kwargs):
 	title = request.GET.get('title', None)
 	course = Course.objects.filter(id=request.GET.get('c_id', None))[0]
@@ -125,27 +88,13 @@ def addModule(request, **kwargs):
 		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']
 	module = Module(course=course, order=order, title=title)
 	module.save()
-	url = '/system/manage/{}/{}/{}/displayModuleContent/'.format(request.GET.get('i_id', None),
-																	 course.id,
-																	 module.id)
-	context = {
-		'title': title,
-		'url': url,
-	}
-	return JsonResponse(context)
+	return redirect('/system/view/{}/{}/'.format(request.GET.get('i_id', None), course.id))
 
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
 	Module.objects.filter(id=kwargs['module_id']).delete()
 	modules = Module.objects.filter(course__id=kwargs['course_id']).order_by('order')
-	context = {
-		'course': Course.objects.filter(id=kwargs['course_id'])[0],
-		'modules': modules,
-		'type': 'instructor',
-		'progress': -1,
-		'u_id': kwargs['instructor_id'],
-	}
-	return HttpResponse(template.render(context, request))
+	return redirect('/system/view/{}/{}/'.format(kwargs['instructor_id'], kwargs['course_id']))
 
 def removeQuiz(request, **kwargs):
 	quiz = Quiz.objects.get(id=kwargs['quiz_id'])

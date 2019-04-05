@@ -7,7 +7,7 @@ $(document).ready(function(){
     var i_id = $(btn).attr('data-uid');
     var c_id = $(btn).attr('data-courseID');
     if(cm_exist==false){
-      var p2 = 'Module Title: <input type="text" name="title"></input>';
+      var p2 = 'Module Title: <input id="input_m_title" type="text" name="title"></input>';
       var p4 = '<input type="hidden" name="c_id" value='+c_id+'>';
       var p5 = '<input type="hidden" name="i_id" value='+i_id+'>';
       var p6 = '<input type="submit"></input>';
@@ -17,24 +17,7 @@ $(document).ready(function(){
     }
   }
 
-  $("#module_info").submit(function(){
-    event.preventDefault();
-    var form = $("#module_info");
-    var form_data = $(form).serialize();
-
-    $.ajax({
-        url: $(form).attr('action'),
-        data: form_data,
-        dataType: 'json',
-        success: function (context) {
-          $(form).style.display = "none";
-          p = '<li><a href="'+context.url+'">'+context.title+'</a></li>';
-          $("module_list").append(p);
-        }
-      });
-
-
-  });
+  var form = $("#module_info");
 
 
 })
