@@ -1,0 +1,28 @@
+
+
+{% block content %}
+	<ul>
+	<h1>{{ module.title }}</h1>
+    {% if type == 'learner' %}
+        {% for component in components %}
+        {{ component.getHTML | safe}}
+		{% endfor %}
+		{% if module.order == progress %}
+		<br ><a href = "./quiz/"> take quiz </a>
+		{% endif %}
+    {% else %}
+		{% for component in components %}
+			<h5>{{ component.title }}    
+            </h5>
+            {{ component.getHTML | safe}}    
+			<p>created at: {{ component.create_at }}  
+			</p>
+			<p>last update: {{ component.update_at }} 
+			</p>
+			<a href = "./{{ component.id }}/modiCompOrd/"> set order </a>
+        {% endfor %}
+        <!-- create/setOrder button not implemented -->
+    {% endif %}
+	</ul>
+	<a href = "../" > back </a>
+{% endblock %}

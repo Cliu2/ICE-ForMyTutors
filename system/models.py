@@ -155,8 +155,8 @@ class Enroll(models.Model):
 	learner = models.ForeignKey(Learner, on_delete=models.CASCADE)
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
-	status = models.BooleanField()
-	progress = models.IntegerField()								# modules that visible to the learner
+	status = models.BooleanField(default=False)
+	progress = models.IntegerField(default=0)								# modules that visible to the learner
 	finish_time = models.DateField(default=None)
 
 	def __str__(self):

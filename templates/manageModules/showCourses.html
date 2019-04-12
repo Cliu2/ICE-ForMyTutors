@@ -9,10 +9,18 @@
 	{% if type == "instructor" %}
 		<ul>
 		{% for course in course_list %}
-			<li><a href="{{course.id}}/">{{course}}</a></li>
-		</ul>
+			<li><a href="/system/view/{{user.id}}/{{course.id}}/">{{course}}</a></li>
 		{% endfor %}
+		</ul>
 		<button>Create Course</button>
+	{% else %}
+		<div id="l_courseList">
+			<ul>
+				{% for course in course_list %}
+					<li><a href="/system/view/{{user.id}}/{{course.id}}/">{{course}}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
 	{% endif %}
 </body>
 </html>
