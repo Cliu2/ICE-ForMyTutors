@@ -10,7 +10,7 @@ urlpatterns = [
     #path('view/<int:user_id>/<int:course_id>/<int:module_id>/', views.showComponents, name='showComponents'),          # view component list
 
     # instructor editing mode
-    path('manage/<int:instructor_id>/addCourse/', views.addCourse, name="addCourse"),
+    path('manage/<int:instructor_id>/addCourse/', views.createCourse, name="addCourse"),
     path('manage/<int:instructor_id>/loadCategory/', moreviews.loadCategory, name="loadCategory"),
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
     path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),

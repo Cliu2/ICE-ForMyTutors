@@ -1,5 +1,19 @@
 $(document).ready(function(){
   var btn = document.querySelector("#create_course");
+  var form = document.querySelector("#courseInfo");
+
+  set_input_category = function(){
+    var new_category = document.getElementById('select_category').value;
+    var input_category = document.getElementById('input_category');
+    input_category.setAttribute('value', new_category);
+  }
+  set_input_CECU = function(){
+    var new_CECU = document.getElementById('select_CECU').value;
+    // alert(new_CECU);
+    var input_CECU = document.getElementById('input_CECU');
+    input_CECU.setAttribute('value', new_CECU);
+  }
+
 
   $(btn).click(function(){
     i_id = $(btn).attr('data-instructorID');
@@ -7,14 +21,12 @@ $(document).ready(function(){
     form.setAttribute('id', 'courseInfo');
     form.setAttribute('action', '/system/manage/'+i_id+'/addCourse/');
     form.setAttribute('method', 'GET');
-    form.setAttribute('onsubmit', 'check()');
     document.body.appendChild(form);
 
     var input_title = document.createElement("INPUT");
     input_title.setAttribute('id', 'c_title');
     input_title.setAttribute('type', 'text');
     input_title.setAttribute('name', 'title');
-
 
     var input_des = document.createElement("INPUT");
     input_des.setAttribute('id', 'c_des');
@@ -31,21 +43,19 @@ $(document).ready(function(){
     input_CECU.setAttribute('name', 'CECU');
     input_CECU.setAttribute('type', 'hidden');
 
+    form.append('Title: ');
     form.appendChild(input_title);
+    form.append('Description: ');
     form.appendChild(input_des);
     form.appendChild(input_category);
     form.appendChild(input_CECU);
 
     select_category = document.createElement("SELECT");
     select_category.setAttribute('id', 'select_category');
-    select_category.setAttribute('onchange', 'set_input_category()');
     load_category();
-
-
-
-    var select_CECU = document.createElement("SELECT");
+    select_CECU = document.createElement("SELECT");
     select_CECU.setAttribute('id', 'select_CECU');
-    select_CECU.setAttribute('onchange', 'set_input_CECU()');
+
     var CECU_2 = document.createElement("OPTION");
     CECU_2.innerHTML = '2';
     var CECU_4 = document.createElement("OPTION");
@@ -53,29 +63,22 @@ $(document).ready(function(){
     select_CECU.appendChild(CECU_2);
     select_CECU.appendChild(CECU_4);
 
-    input_category.setAttribute('value', select_category.value);
-    input_CECU.setAttribute('value', select_CECU.value);
-
+    form.append('Category: ');
     form.appendChild(select_category);
+    form.append('CECU: ');
     form.appendChild(select_CECU);
 
     var submit_button = document.createElement("INPUT");
     submit_button.setAttribute('type', 'submit');
     form.append(submit_button);
 
+    select_category.setAttribute('onchange', 'set_input_category();');
+    select_CECU.setAttribute('onchange', 'set_input_CECU()');
+
+
   });
 
-  function set_input_category(){
-    var new_category = document.getElementById('select_category').value;
-    var input_category = document.getElementById('input_category');
-    input_category.setAttribute('value', new_category);
-  }
 
-  function set_input_CECU(){
-    var new_CECU = document.getElementById('select_CECU').value;
-    var input_CECU = document.getElementById('input_CECU');
-    input_CECU.setAttribute('value', new_CECU);
-  }
 
   function load_category(){
     var url = '/system/manage/'+i_id+'/loadCategory';
@@ -89,15 +92,12 @@ $(document).ready(function(){
                  c.innerHTML = categories[i];
                  select_category.appendChild(c);
                }
+               set_input_category();
+               set_input_CECU();
              }
            }
     );
   }
-
-  $("#courseInfo").submit(function(event){
-    event.preventDefault();
-    alert("submit the form!");
-  });
 
 
 

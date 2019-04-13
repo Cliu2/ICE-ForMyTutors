@@ -104,7 +104,7 @@ def addModule(request, **kwargs):
 	module.save()
 	return redirect('/system/view/{}/{}/'.format(request.GET.get('i_id', None), course.id))
 
-def addCourse(request, **kwargs):
+def createCourse(request, **kwargs):
 	title = request.GET.get('title', None)
 	description = request.GET.get('description', None)
 	category = Category.objects.filter(name=request.GET.get('category', None))[0]
