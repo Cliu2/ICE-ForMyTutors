@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .moreviews import manageModules, studyModule
+from .moreviews import manageModules, studyModule, moreviews
 
 urlpatterns = [
     # both users
@@ -10,6 +10,8 @@ urlpatterns = [
     #path('view/<int:user_id>/<int:course_id>/<int:module_id>/', views.showComponents, name='showComponents'),          # view component list
 
     # instructor editing mode
+    path('manage/<int:instructor_id>/addCourse/', views.addCourse, name="addCourse"),
+    path('manage/<int:instructor_id>/loadCategory/', moreviews.loadCategory, name="loadCategory"),
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
     path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/deleteModule/', views.deleteModule, name="deleteModule"),

@@ -107,7 +107,7 @@ def takeQuiz(request, **kwargs):
 	template =loader.get_template("takeQuiz.html")
 	quiz = Quiz.objects.filter(module__id = m_id)[0]
 	q_id = quiz.pk
-	question_list = Question.objects.filter(quiz__id = q_id).order_by('?')[:(quiz.num_to_draw)]
+	question_list = Question.objects.filter(quiz__id = q_id).order_by('?')[:(quiz.num_draw)]
 	context = {
 		'question_list': question_list,
 	}
@@ -132,11 +132,10 @@ def submitAnswer(request, **kwargs):
 	for x in submitted:
 		if submitted[x] == res["q"+x]:
 			count+=1
-	count=count*100/quiz.num_to_draw
 	if count >= quiz.pass_score:
 		passing = "pass"
-		prog =  Enrolment.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
-		Enrolment.objects.filter(learner__id = u_id,course__id = c_id).update(progress=prog+1)
+		prog =  Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
+		Enroll.objects.filter(learner__id = u_id,course__id = c_id).update(progress=prog+1)
 	else:
 		passing = "fail"
 	context = {
