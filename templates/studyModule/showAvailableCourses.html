@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+  <title>available courses</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/static/show_available_courses.js"></script>
+</head>
+
+<body>
+  <div>
+    filter by:
+    <select id="filterBy">
+      <option>name</option>
+      <optgroup id="select_category" label="categories:">
+        <!--
+        <option>Math</option>
+        <option>XXXX</option>
+        -->
+      </optgroup>
+    </select>
+  </div>
+  <div>
+    <ul id="course_list" data-learnerID="{{learner.id}}">
+      {% for course in course_list %}
+        <li class="course" data-category="{{course.category.name}}" data-v="{{course}}"><a href="/system/view/{{learner.id}}/browseCourse/detail/{{course.id}}/">{{course}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>

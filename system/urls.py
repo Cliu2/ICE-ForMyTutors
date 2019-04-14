@@ -11,7 +11,6 @@ urlpatterns = [
 
     # instructor editing mode
     path('manage/<int:instructor_id>/addCourse/', views.createCourse, name="addCourse"),
-    path('manage/<int:instructor_id>/loadCategory/', moreviews.loadCategory, name="loadCategory"),
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
     path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/deleteModule/', views.deleteModule, name="deleteModule"),
@@ -24,11 +23,14 @@ urlpatterns = [
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/saveOrder/<slug:neworder>/',manageModules.saveOrder,name='saveOrder'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/removeComponent/<int:component_id>',manageModules.removeComponent,name='removeComponentFromModule'),
 
+    path('manage/<int:instructor_id>/loadCategory/', moreviews.loadCategory, name="loadCategory"),
+
     # learner study mode
     # path('view/<int:user_id>/', studyModule.viewEnrolled, name='viewEnrolled'),   # view course list
     # path('view/<int:user_id>/<int:course_id>/', views.viewCourse, name='viewCourse'),                           # view module list
-
+    path('view/<int:learner_id>/browseCourse/', studyModule.browseCourse, name='browseCourse'),
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/', studyModule.takeQuiz, name='takeQuiz'),        # learner takes quiz
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/submitAnswer/', studyModule.submitAnswer, name='submitAnswer'),        # learner submits answer
 
+    path('view/<int:learner_id>/loadCategoryForLearner/', moreviews.loadCategory, name='loadCategoryForLearner'),
 ]

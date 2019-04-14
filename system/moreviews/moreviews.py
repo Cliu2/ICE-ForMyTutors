@@ -16,3 +16,9 @@ def loadCategory(request, **kwargs):
     categories = list(c.name for c in Category.objects.all())
     data = {'categories': categories}
     return JsonResponse(data)
+
+def loadCategoryForLearner(request, **kwargs):
+    categories = list(c.category.name for c in Course.objects.filter(status=0))
+    categories.sort()
+    data = {'categories': categories}
+    return JsonResponse(data)

@@ -227,6 +227,15 @@ def compOrder(request, **kwargs):
 	return HttpResponse(template.render(context, request))
 
 
+def browseCourse(request, **kwargs):
+	template = loader.get_template('showAvailableCourses.html')
+	enrollments = Enroll.objects.filter(learner__id=kwargs['learner_id'])
+	open_courses = Course.objects.filter(status=0).order_by('title')
+	context = {
+		'course_list': open_courses,
+		'learner': Learner.objects.filter(id=kwargs['learner_id'])[0]
+	}
+	return HttpResponse(template.render(context, request))
 
 
 
