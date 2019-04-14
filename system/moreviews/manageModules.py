@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
@@ -10,6 +10,7 @@ from django.views import View
 from django.core.exceptions import SuspiciousOperation
 from ..forms import *
 from ..models import *
+import json
 
 def checkCourseBelongToInstructor(course,instructor):
 	if course.instructor.pk!=instructor.pk:
@@ -45,7 +46,7 @@ def addComponent(request,**kwargs):
 	# raise error is the component has already been assigned to a module
 	if component.module:
 		raise SuspiciousOperation("Invalid request; the component has been assigned to a module already")
-	
+
 	component.module=module
 	component.setOrder(index)
 	component.save()
@@ -53,8 +54,17 @@ def addComponent(request,**kwargs):
 	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
 																		   kwargs['course_id'],
 																		   kwargs['module_id']))
+"""
+def selectComponent(request, **kwargs):
+	course = Course.objects.get(id=kwargs['course_id'])
+	instructor = Instructor.objects.get(id=kwargs['instructor_id'])
+	checkCourseBelongToInstructor(course, instructor)
+	available_components = list(c.as_json() for c in Component.objects.filter(course__id=course.id, order__lte=-1))
+	return JsonResponse(available_components, safe=False)
+"""
 
-	
+
+
 def displayModuleContent(request, **kwargs):
 	module_id=kwargs['module_id']
 	module=Module.objects.get(id=module_id)

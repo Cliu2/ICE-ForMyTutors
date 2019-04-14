@@ -99,6 +99,13 @@ class Component(models.Model):
 		self.order=index
 		self.save()
 
+	def as_json(self):
+		return dict(
+			id = self.id,
+			course_id = self.course.id,
+			title = self.title
+		)
+
 
 class ComponentImage(Component):
 	path=models.CharField(max_length=200)

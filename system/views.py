@@ -79,42 +79,19 @@ def showModules(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
-#	instructor manage course
-def enterModuleInfo(request, **kwargs):
- 	template = loader.get_template("enterModuleInfo.html")
-	#modules = Module.objects.filter(course__id=kwargs['course_id'])
- 	#order = Module.objects.filter(course__id=kwargs['course_id']).order_by('-order')[0].order
- 	context = {
- 		'i_id': kwargs['instructor_id'],
- 		'c_id': kwargs['course_id'],
- 		'order': 0,
- 	}
- 	return HttpResponse(template.render(context, request))
 
-
-def addModule2(request, **kwargs):
-	msg = request.GET
-	m_title = msg['title']
-	course = Course.objects.filter(id=msg['c_id'])[0]
-	order = msg['order']
-	module = Module(course=course, order=order, title=m_title)
-	module.save()
-
-	i_id = kwargs['instructor_id']
-	c_id = kwargs['course_id']
-	template = loader.get_template("showModules.html")
-	instructor = Instructor.objects.filter(id=i_id)[0]
-	course = Course.objects.filter(id=c_id)[0]
-	modules = Module.objects.filter(course__id=c_id).order_by('order')
-	progress = -1
+"""
+def ICourseList(request, **kwargs):
+	instructor = Instructor.objects.filter(id=kwargs['instructor_id'])[0]
+	course_list = list(Course.objects.filter(instructor__id=user_id).order_by('status'))
+	status = list(c.status for c in Course.objects.filter(instructor__id=user_id).order_by('status'))
 	context = {
-		'course': course,
-		'modules': modules,
-		'type': 'instructor',
-		'progress': progress,
-		'u_id': i_id,
+		'course_list': course_list,
+		'status': status,
+		'insturctor': instructor,
 	}
-	return HttpResponse(template.render(context, request))
+	return HttpResponse(template.render())
+"""
 
 def addModule(request, **kwargs):
 	title = request.GET.get('title', None)
@@ -125,27 +102,28 @@ def addModule(request, **kwargs):
 		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']
 	module = Module(course=course, order=order, title=title)
 	module.save()
-	url = '/system/manage/{}/{}/{}/displayModuleContent/'.format(request.GET.get('i_id', None),
-																	 course.id,
-																	 module.id)
-	context = {
-		'title': title,
-		'url': url,
-	}
-	return JsonResponse(context)
+	return redirect('/system/view/{}/{}/'.format(request.GET.get('i_id', None), course.id))
+
+def createCourse(request, **kwargs):
+	title = request.GET.get('title', None)
+	description = request.GET.get('description', None)
+	category = Category.objects.filter(name=request.GET.get('category', None))[0]
+	CECU = request.GET.get('CECU', None)
+	instructor = Instructor.objects.filter(id=kwargs['instructor_id'])[0]
+	course = Course(instructor=instructor,
+					category=category,
+					title=title,
+					description=description,
+					CECU_value=CECU,
+					status=1)
+	course.save()
+	return redirect('/system/view/{}/'.format(kwargs['instructor_id']))
 
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
 	Module.objects.filter(id=kwargs['module_id']).delete()
 	modules = Module.objects.filter(course__id=kwargs['course_id']).order_by('order')
-	context = {
-		'course': Course.objects.filter(id=kwargs['course_id'])[0],
-		'modules': modules,
-		'type': 'instructor',
-		'progress': -1,
-		'u_id': kwargs['instructor_id'],
-	}
-	return HttpResponse(template.render(context, request))
+	return redirect('/system/view/{}/{}/'.format(kwargs['instructor_id'], kwargs['course_id']))
 
 def removeQuiz(request, **kwargs):
 	quiz = Quiz.objects.get(id=kwargs['quiz_id'])
@@ -184,72 +162,3 @@ def addQuiz(request, **kwargs):
 	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
 																		   kwargs['course_id'],
 																		   kwargs['module_id']))
-
-"""
-class addModule(View):
-	def post(self, request):
-		course = Course.objects.filter(c_id=request.POST.get("c_id"))								# do not care order so far
-		title = request.POST.get("title")
-		new_module = Module(course=course, title=title)
-		new_module.save()
-		return showModules(user_id=request.POST.get("u_id"), course_id=request.POST.get("c_id"))
-"""
-
-"""
-def manageComponent(request, **kwargs):
-	pass
-def showQuizzes(request, **kwargs):
-	pass
-def viewQuiz(request, **kwargs):
-	pass
-
-
-	#learner study course
-
-def takeQuiz(request, **kwargs):
-	pass
-
-	#instructor views
-
-class ManageModule(ListView):
-	pass
-
-class ShowComponents(ListView):
-	pass
-
-class ShowCourses(ListView):
-	pass
-
-class showQuiz(ListView):
-	pass
-
-
-
-	#learner views
-
-def showCourses(request, learner_id):			# course list for a learner
-	l_courses = Enroll.objects.get(learner__id=learner_id).values('course')
-	template = loader.get_template("course_list.html")
-	context = {
-		'l_courses': l_courses
-	}
-	return HttpResponse(template.render(context, request))
-
-def viewCourse(request, learner_id, course_id):
-	c_modules = Module.objects.get(course__id=course_id)
-	l_progress = Enroll.objects.get(course__id=course_id, learner__id=learner_id).values('progress')
-	template = loader.get_template("course_content.html")
-	context = {
-		'c_modules': c_modules,
-		'l_progress': l_progress
-	}
-	return HttpResponse(template.render(context, request))
-
-def studyModule(request,**kwargs):
-	# to be done
-	pass
-
-def takeQuiz(request,**kwargs):
-	#to be done
-	pass
-"""
