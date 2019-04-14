@@ -55,8 +55,10 @@ ROOT_URLCONF = 'ICE.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates/manageModules'),
-                 os.path.join(BASE_DIR,'templates/studyModule')],
+        'DIRS': [os.path.join(BASE_DIR,'templates'),
+                 os.path.join(BASE_DIR,'templates/manageModules'),
+                 os.path.join(BASE_DIR,'templates/studyModule'),
+                 os.path.join(BASE_DIR,'templates/registration'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,3 +125,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=(
     os.path.join(BASE_DIR,"static"),
 )
+
+#Login redirect address
+LOGIN_REDIRECT_URL='/system/loadHome/'
+LOGOUT_REDIRECT_URL='/accounts/login/'
