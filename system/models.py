@@ -164,7 +164,7 @@ class Enroll(models.Model):
 
 	status = models.BooleanField(default=False)
 	progress = models.IntegerField(default=0)								# modules that visible to the learner
-	finish_time = models.DateField(default=None)
+	finish_time = models.DateField(default=None, null=True)
 
 	def __str__(self):
 		return f'{self.learner} | {self.course.title}'

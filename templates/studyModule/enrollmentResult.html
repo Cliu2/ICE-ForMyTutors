@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<head>
+  <title>enrollment result</title>
+</head>
+<body>
+  {% if disabled == "true" %}
+    You cannot enroll in the same course twice!
+  {% else %}
+    You have successfully enrolled in {{course.title}}
+  {% endif %}
+  <a href="/system/view/{{learner.id}}/browseCourse/">Back to Browse Course</a>
+</body>

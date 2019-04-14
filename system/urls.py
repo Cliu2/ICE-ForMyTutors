@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .moreviews import manageModules, studyModule, moreviews
+from .moreviews import manageModules, studyModule, moreviews, enrollment
 
 urlpatterns = [
     # both users
@@ -29,8 +29,10 @@ urlpatterns = [
     # path('view/<int:user_id>/', studyModule.viewEnrolled, name='viewEnrolled'),   # view course list
     # path('view/<int:user_id>/<int:course_id>/', views.viewCourse, name='viewCourse'),                           # view module list
     path('view/<int:learner_id>/browseCourse/', studyModule.browseCourse, name='browseCourse'),
+    path('view/<int:learner_id>/enrollInCourse/<int:course_id>/', enrollment.enrollInCourse, name='enrollInCourse'),
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/', studyModule.takeQuiz, name='takeQuiz'),        # learner takes quiz
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/submitAnswer/', studyModule.submitAnswer, name='submitAnswer'),        # learner submits answer
 
     path('view/<int:learner_id>/loadCategoryForLearner/', moreviews.loadCategory, name='loadCategoryForLearner'),
+    path('view/<int:learner_id>/browseCourse/detail/<int:course_id>/', views.viewCourseDetail, name='viewCourseDetail'),
 ]

@@ -162,3 +162,20 @@ def addQuiz(request, **kwargs):
 	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
 																		   kwargs['course_id'],
 																		   kwargs['module_id']))
+def viewCourseDetail(request, **kwargs):
+	template = loader.get_template("courseDetail.html")
+	course = Course.objects.filter(id=kwargs['course_id'])[0]
+	is_enrolled = Enroll.objects.filter(course__id=kwargs['course_id'], learner_id=kwargs['learner_id'])
+	instructor = Instructor.objects.filter(id=course.instructor.id)[0]
+	learner = Learner.objects.filter(id=kwargs['learner_id'])[0]
+	if len(is_enrolled)>0:
+		disabled = True
+	else:
+		disabled = False
+	context = {
+		'course': course,
+		'disabled': disabled,
+		'instructor': instructor,
+		'learner': learner
+	}
+	return HttpResponse(template.render(context, request))

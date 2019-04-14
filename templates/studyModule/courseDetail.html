@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<head>
+  <title>Detail for {{course.title}} </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/static/enroll_in_course.js"></script>
+</head>
+<body>
+  <h2>Detail for {{course.title}}</h2>
+  <p><b>Category:</b> {{course.category}}</p>
+  <p><b>Course Info:</b> {{course.description}}</p>
+  <p><b>Instructor:</b>
+    Name: {{instructor.first_name}} {{instructor.last_name}}<br>
+    Autobiagraphy: {{instructor.autobiagraphy}}<br>
+    Email: {{instructor.email}}<br>
+  </p>
+  <p><b>CECU: </b>{{course.CECU_value}}</p>
+  <button id="enroll" data-disabled="{{disabled}}"><a href="/system/view/{{learner.id}}/enrollInCourse/{{course.id}}/">Enroll</a></button>
+</body>
