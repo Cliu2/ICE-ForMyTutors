@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf.urls import url
 from . import views
-from .moreviews import manageModules,moreviews,studyModule,auth
+from .moreviews import manageModules, studyModule, moreviews, enrollment, auth
 
 urlpatterns = [
     # both users
@@ -16,7 +16,8 @@ urlpatterns = [
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerInstructor,name='registerInstructor'),
 
     # instructor editing mode
-    path('manage/<int:instructor_id>/addCourse/', views.createCourse, name="addCourse"),
+    path('manage/<int:instructor_id>/addCourse/', views.createCourse, name='addCourse'),
+    path('manage/<int:instructor_id>/editCourse/<int:course_id>/', views.editCourse, name='editCourse'),
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
     path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/deleteModule/', views.deleteModule, name="deleteModule"),
@@ -29,14 +30,17 @@ urlpatterns = [
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/saveOrder/<slug:neworder>/',manageModules.saveOrder,name='saveOrder'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/removeComponent/<int:component_id>',manageModules.removeComponent,name='removeComponentFromModule'),
 
+    path('manage/<int:instructor_id>/loadCourseInfo/<int:course_id>/', moreviews.loadCourseInfo, name='loadCourseInfo'),
     path('manage/<int:instructor_id>/loadCategory/', moreviews.loadCategory, name="loadCategory"),
 
     # learner study mode
     # path('view/<int:user_id>/', studyModule.viewEnrolled, name='viewEnrolled'),   # view course list
     # path('view/<int:user_id>/<int:course_id>/', views.viewCourse, name='viewCourse'),                           # view module list
     path('view/<int:learner_id>/browseCourse/', studyModule.browseCourse, name='browseCourse'),
+    path('view/<int:learner_id>/enrollInCourse/<int:course_id>/', enrollment.enrollInCourse, name='enrollInCourse'),
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/', studyModule.takeQuiz, name='takeQuiz'),        # learner takes quiz
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/quiz/submitAnswer/', studyModule.submitAnswer, name='submitAnswer'),        # learner submits answer
 
     path('view/<int:learner_id>/loadCategoryForLearner/', moreviews.loadCategory, name='loadCategoryForLearner'),
+    path('view/<int:learner_id>/browseCourse/detail/<int:course_id>/', views.viewCourseDetail, name='viewCourseDetail'),
 ]
