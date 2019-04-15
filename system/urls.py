@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .moreviews import manageModules, studyModule, moreviews, enrollment
+from .moreviews import manageModules, studyModule, moreviews, enrollment, auth
 
 urlpatterns = [
     # both users
@@ -8,6 +8,7 @@ urlpatterns = [
     path('view/<int:user_id>/<int:course_id>/', views.showModules, name='showModules'),                               # view module list
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/', studyModule.viewModule, name='viewModule'),      # view component list
     #path('view/<int:user_id>/<int:course_id>/<int:module_id>/', views.showComponents, name='showComponents'),          # view component list
+    path('loadHome/',auth.loadHome,name='loadHome'),   # by LC, redirect users to their home after login
 
     # instructor editing mode
     path('manage/<int:instructor_id>/addCourse/', views.createCourse, name="addCourse"),
