@@ -119,6 +119,15 @@ def createCourse(request, **kwargs):
 	course.save()
 	return redirect('/system/view/{}/'.format(kwargs['instructor_id']))
 
+def editCourse(request, **kwargs):
+	course = Course.objects.filter(id=kwargs['course_id'])[0]
+	course.title = request.GET.get('title', None)
+	course.description = request.GET.get('description', None)
+	course.category = Category.objects.filter(name=request.GET.get('category', None))[0]
+	course.CECU_value = request.GET.get('CECU', None)
+	course.save()
+	return redirect('/system/view/{}/'.format(kwargs['instructor_id']))
+
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
 	Module.objects.filter(id=kwargs['module_id']).delete()

@@ -11,7 +11,8 @@ urlpatterns = [
     path('loadHome/',auth.loadHome,name='loadHome'),   # by LC, redirect users to their home after login
 
     # instructor editing mode
-    path('manage/<int:instructor_id>/addCourse/', views.createCourse, name="addCourse"),
+    path('manage/<int:instructor_id>/addCourse/', views.createCourse, name='addCourse'),
+    path('manage/<int:instructor_id>/editCourse/<int:course_id>/', views.editCourse, name='editCourse'),
     path('manage/<int:instructor_id>/<int:course_id>/requestAdd/', views.enterModuleInfo, name='enterModuleInfo'),
     path('manage/<int:instructor_id>/<int:course_id>/add/',views.addModule, name='manageModule'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/deleteModule/', views.deleteModule, name="deleteModule"),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/saveOrder/<slug:neworder>/',manageModules.saveOrder,name='saveOrder'),
     path('manage/<int:instructor_id>/<int:course_id>/<int:module_id>/removeComponent/<int:component_id>',manageModules.removeComponent,name='removeComponentFromModule'),
 
+    path('manage/<int:instructor_id>/loadCourseInfo/<int:course_id>/', moreviews.loadCourseInfo, name='loadCourseInfo'),
     path('manage/<int:instructor_id>/loadCategory/', moreviews.loadCategory, name="loadCategory"),
 
     # learner study mode
