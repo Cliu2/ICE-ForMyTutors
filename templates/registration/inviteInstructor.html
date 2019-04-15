@@ -1,0 +1,10 @@
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+<form action="/system/auth/sendInstructorLink/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Send Invitation">
+</form>
+{% endif %}
+{% endblock %}

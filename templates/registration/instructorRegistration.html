@@ -1,5 +1,7 @@
 {% autoescape off %}
-Hi {{ user.username }},
-Please click on the link to confirm your registration,
-http://{{ domain }}{% url 'registerInstructor' uidb64=uid token=token %}
+Hi {{ name }},
+This is the invation link for ICE.
+
+Please click on the link to finish your registration,
+http://{{ domain }}{% url 'registerInstructor' uidb64=name token=token %}
 {% endautoescape %}

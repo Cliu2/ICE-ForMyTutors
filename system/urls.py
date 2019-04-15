@@ -14,6 +14,7 @@ urlpatterns = [
     path('loadHome/',auth.loadHome,name='loadHome'),   # by LC, redirect users to their home after login
     path('auth/sendInstructorLink/',auth.sendInstructorLink,name='sendInstructorLink'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerInstructor,name='registerInstructor'),
+    path('auth/inviteInstructor/',auth.inviteInstructor,name='inviteInstructor'),
 
     # instructor editing mode
     path('manage/<int:instructor_id>/addCourse/', views.createCourse, name='addCourse'),
