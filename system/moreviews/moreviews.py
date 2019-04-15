@@ -22,3 +22,13 @@ def loadCategoryForLearner(request, **kwargs):
     categories.sort()
     data = {'categories': categories}
     return JsonResponse(data)
+
+def loadCourseInfo(request, **kwargs):
+    course = Course.objects.filter(id=kwargs['course_id'])[0]
+    data = {
+        'title': course.title,
+        'description': course.description,
+        'category': course.category.name,
+        'CECU': course.CECU_value
+    }
+    return JsonResponse(data)

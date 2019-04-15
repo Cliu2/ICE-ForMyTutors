@@ -119,6 +119,15 @@ def createCourse(request, **kwargs):
 	course.save()
 	return redirect('/system/view/{}/'.format(kwargs['instructor_id']))
 
+def editCourse(request, **kwargs):
+	course = Course.objects.filter(id=kwargs['course_id'])[0]
+	course.title = request.GET.get('title', None)
+	course.description = request.GET.get('description', None)
+	course.category = Category.objects.filter(name=request.GET.get('category', None))[0]
+	course.CECU_value = request.GET.get('CECU', None)
+	course.save()
+	return redirect('/system/view/{}/'.format(kwargs['instructor_id']))
+
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
 	Module.objects.filter(id=kwargs['module_id']).delete()
@@ -162,3 +171,20 @@ def addQuiz(request, **kwargs):
 	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
 																		   kwargs['course_id'],
 																		   kwargs['module_id']))
+def viewCourseDetail(request, **kwargs):
+	template = loader.get_template("courseDetail.html")
+	course = Course.objects.filter(id=kwargs['course_id'])[0]
+	is_enrolled = Enroll.objects.filter(course__id=kwargs['course_id'], learner_id=kwargs['learner_id'])
+	instructor = Instructor.objects.filter(id=course.instructor.id)[0]
+	learner = Learner.objects.filter(id=kwargs['learner_id'])[0]
+	if len(is_enrolled)>0:
+		disabled = True
+	else:
+		disabled = False
+	context = {
+		'course': course,
+		'disabled': disabled,
+		'instructor': instructor,
+		'learner': learner
+	}
+	return HttpResponse(template.render(context, request))
