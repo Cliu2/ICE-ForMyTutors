@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<head>
+  <title>Course History for {{learner.first_name}}</title>
+</head>
+<body>
+  <ul>
+  {% for enroll in enrolls %}
+    <li>
+      <b>Course - </b> {{enroll.course}}<br>
+      <b>Date of completion - </b>{{enroll.finish_time}}<br>
+      <b>CECU - </b>{{enroll.course.CECU_value}}
+    </li>
+  {% endfor %}
+  <a href="/system/view/{{learner.id}}/">Back to Courses</a>
+  </ul>
+</body>

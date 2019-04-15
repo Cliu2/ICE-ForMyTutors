@@ -237,8 +237,15 @@ def browseCourse(request, **kwargs):
 	}
 	return HttpResponse(template.render(context, request))
 
-
-
+def viewCourseHistory(request, **kwargs):
+	template = loader.get_template('courseHistory.html')
+	enrolls = list({'course': e.course, 'finish_time': e.finish_time} for e
+    				in Enroll.objects.filter(learner__id=8, status=True))
+	context = {
+		'enrolls': enrolls,
+		'learner': Learner.objects.filter(id=kwargs['learner_id'])[0]
+	}
+	return HttpResponse(template.render(context, request))
 
 
 def manageModule(request, **kwargs):

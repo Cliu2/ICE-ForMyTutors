@@ -38,4 +38,5 @@ urlpatterns = [
 
     path('view/<int:learner_id>/loadCategoryForLearner/', moreviews.loadCategory, name='loadCategoryForLearner'),
     path('view/<int:learner_id>/browseCourse/detail/<int:course_id>/', views.viewCourseDetail, name='viewCourseDetail'),
+    path('view/<int:learner_id>/viewCourseHistory/', studyModule.viewCourseHistory, name='viewCourseHistory'),
 ]
