@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 from . import views
 from .moreviews import manageModules,moreviews,studyModule,auth
 
@@ -8,7 +9,11 @@ urlpatterns = [
     path('view/<int:user_id>/<int:course_id>/', views.showModules, name='showModules'),                               # view module list
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/', studyModule.viewModule, name='viewModule'),      # view component list
     #path('view/<int:user_id>/<int:course_id>/<int:module_id>/', views.showComponents, name='showComponents'),          # view component list
+    
+    #authentication related
     path('loadHome/',auth.loadHome,name='loadHome'),   # by LC, redirect users to their home after login
+    path('auth/sendInstructorLink/',auth.sendInstructorLink,name='sendInstructorLink'),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerInstructor,name='registerInstructor'),
 
     # instructor editing mode
     path('manage/<int:instructor_id>/addCourse/', views.createCourse, name="addCourse"),

@@ -129,3 +129,10 @@ STATICFILES_DIRS=(
 #Login redirect address
 LOGIN_REDIRECT_URL='/system/loadHome/'
 LOGOUT_REDIRECT_URL='/accounts/login/'
+
+#Email related settings
+EMAIL_USE_TLS=True
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER='iceformytutors@gmail.com'
+EMAIL_HOST_PASSWORD='COMP3297'
+EMAIL_PORT=587
