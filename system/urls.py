@@ -9,7 +9,7 @@ urlpatterns = [
     path('view/<int:user_id>/<int:course_id>/', views.showModules, name='showModules'),                               # view module list
     path('view/<int:user_id>/<int:course_id>/<int:module_id>/', studyModule.viewModule, name='viewModule'),      # view component list
     #path('view/<int:user_id>/<int:course_id>/<int:module_id>/', views.showComponents, name='showComponents'),          # view component list
-    
+
     #authentication related
     path('loadHome/',auth.loadHome,name='loadHome'),   # by LC, redirect users to their home after login
     path('auth/sendInstructorLink/',auth.sendInstructorLink,name='sendInstructorLink'),
