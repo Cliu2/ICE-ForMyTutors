@@ -1,0 +1,10 @@
+{% block content %}
+{% if user.is_authenticated %}
+  {% if res %}
+  	<p>Invation for {{name}} has been successfully sent to {{email}}</p>
+  {% else%}
+  	<p>Error! Email addresses mismatch!<p>
+  {% endif %}
+{% endif %}
+<a href="{{request.META.HTTP_REFERER}}">back</a>
+{% endblock %}
