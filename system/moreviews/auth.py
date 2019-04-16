@@ -19,13 +19,15 @@ from static import tokens
 
 def loadHome(request,**kwargs):
 	user=request.user
-	if isinstance(user,Instructor):
-		print("instructor!")
+	if Instructor.objects.filter(pk=user.pk).exists():
+		# print("instructor!")
 		return redirect('/system/view/{}/'.format(user.pk))
-	elif isinstance(user,Learner):
-		print("learner!")
+	elif Learner.objects.filter(pk=user.pk).exists():
+		# print("learner!")
 		return redirect('/system/view/{}/'.format(user.pk))
-	return redirect('/system/auth/inviteInstructor/'.format(user.pk))
+	else:
+		# admin
+		return redirect('/system/auth/inviteInstructor/'.format(user.pk))
 
 def sendInstructorLink(request,**kwargs):
 	current_site = get_current_site(request)
