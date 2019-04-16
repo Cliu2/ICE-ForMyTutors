@@ -18,6 +18,9 @@ $(document).ready(function(){
   $(btn).click(function(){
     i_id = $(btn).attr('data-instructorID');
     var url = '/system/manage/'+i_id+'/addCourse/';
+
+    $("#form_container").remove();
+
     var form = createForm(url);
     document.body.appendChild(form);
     load_category();
@@ -122,7 +125,7 @@ $(document).ready(function(){
   }
 
   $(".editCourse").click(function(e){
-    // alert($(e.target).attr('data-ID'));
+    $("#form_container").remove();
     c_id = $(e.target).attr('data-courseID');
     i_id = $(e.target).attr('data-instructorID');
     var url = '/system/manage/'+i_id+'/editCourse/'+c_id+'/';
@@ -135,6 +138,9 @@ $(document).ready(function(){
   });
 
   function createForm(url){
+    var form_container = document.createElement("DIV");
+    form_container.setAttribute("id", "form_container");
+
     var form = document.createElement("FORM");
     form.setAttribute('id', 'courseInfo');
     form.setAttribute('action', url);
@@ -179,7 +185,10 @@ $(document).ready(function(){
     var submit_button = document.createElement("INPUT");
     submit_button.setAttribute('type', 'submit');
 
-
+    var cancel_button = document.createElement("BUTTON");
+    cancel_button.setAttribute('class', 'cancel');
+    cancel_button.setAttribute('onclick', 'clearForm()');
+    cancel_button.innerHTML='cancel';
 
     form.appendChild(input_title);
     form.appendChild(input_des);
@@ -189,8 +198,15 @@ $(document).ready(function(){
     form.appendChild(select_CECU);
     form.append(submit_button);
 
-    return form;
+    form_container.append(form);
+    form_container.append(cancel_button);
+    return form_container;
 
 
   }
+
+  clearForm = function(){
+    $("#form_container").remove();
+  }
+
 })
