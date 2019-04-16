@@ -19,13 +19,15 @@ from static import tokens
 
 def loadHome(request,**kwargs):
 	user=request.user
-	if isinstance(user,Instructor):
-		print("instructor!")
+	if Instructor.objects.filter(pk=user.pk).exists():
+		# print("instructor!")
 		return redirect('/system/view/{}/'.format(user.pk))
-	elif isinstance(user,Learner):
-		print("learner!")
+	elif Learner.objects.filter(pk=user.pk).exists():
+		# print("learner!")
 		return redirect('/system/view/{}/'.format(user.pk))
-	return redirect('/system/auth/inviteInstructor/'.format(user.pk))
+	else:
+		# admin
+		return redirect('/system/auth/inviteInstructor/'.format(user.pk))
 
 def sendInstructorLink(request,**kwargs):
 	current_site = get_current_site(request)
@@ -35,7 +37,6 @@ def sendInstructorLink(request,**kwargs):
 		form=inviteInstructorForm(request.POST)
 		data=request.POST.copy()
 		tempUser.instructorName=data.get('name')
-		print(form.is_valid())
 		if (form.is_valid()):
 			message = render_to_string('instructorRegistration.html', {
 				'name': data.get('name'),
@@ -71,5 +72,16 @@ def inviteInstructor(request,**kwargs):
 
 
 def registerInstructor(request,**kwargs):
-	print(request)
-	pass
+	print("hello")
+	template=loader.get_template("registerInstructor.html")
+	form=registerInstructorForm()
+	context={'form':form}
+	return HttpResponse(template.render(context,request))
+
+def createInstructorAccount(request,**kwargs):
+	if request.method=='POST':
+		form=registerInstructorForm(request.POST)
+		newInstructor=form.save(commit=False)
+		newInstructor.save()
+
+	
