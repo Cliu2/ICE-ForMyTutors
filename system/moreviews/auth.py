@@ -137,12 +137,12 @@ def sendLearnerLink(request,**kwargs):
 		newUser.tempMail=target_email
 		current_site = get_current_site(request)
 		mail_subject = 'Register your learner account.'
-		token=tokens.account_activation_token.make_token(newUser)
-		newToken=Token()
-		newToken.token=token
-		newToken.email=target_email
-		newToken.save()
 		if target_email is not None:
+			token=tokens.account_activation_token.make_token(newUser)
+			newToken=Token()
+			newToken.token=token
+			newToken.email=target_email
+			newToken.save()
 			message = render_to_string('learnerLink.html', {
 				'name': first_name+last_name,
 				'domain': current_site.domain,
