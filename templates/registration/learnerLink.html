@@ -3,5 +3,5 @@ Hi {{ name }},
 This is the registration link for ICE.
 
 Please click the link to finish your registration,
-http://{{ domain }}{% url 'registerLearner' uidb64=name token=token %}
+http://{{ domain }}{% url 'registerLearner' first_name=first_name  last_name=last_name token=token %}
 {% endautoescape %}
