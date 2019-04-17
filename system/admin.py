@@ -13,3 +13,5 @@ admin.site.register(ComponentText)
 admin.site.register(ComponentImage)
 admin.site.register(Enroll)
 admin.site.register(Category)
+admin.site.register(Token)
+

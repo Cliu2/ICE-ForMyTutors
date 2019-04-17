@@ -1,0 +1,7 @@
+{% autoescape off %}
+Hi {{ name }},
+This is the registration link for ICE.
+
+Please click the link to finish your registration,
+http://{{ domain }}{% url 'registerLearner' uidb64=name token=token %}
+{% endautoescape %}

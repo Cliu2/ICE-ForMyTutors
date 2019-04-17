@@ -27,26 +27,30 @@ def loadHome(request,**kwargs):
 		return redirect('/system/view/{}/'.format(user.pk))
 	else:
 		# admin
-		return redirect('/system/auth/inviteInstructor/'.format(user.pk))
+		return redirect('/system/auth/inviteInstructor/')
 
 def sendInstructorLink(request,**kwargs):
 	current_site = get_current_site(request)
 	mail_subject = 'Register your instructor account.'
-	tempUser=request.user
+	tempUser=Instructor()
 	if request.method=='POST':
 		form=inviteInstructorForm(request.POST)
 		data=request.POST.copy()
-		tempUser.instructorName=data.get('name')
+		tempUser.tempMail=data.get('email')
+		tempUser.tempName=data.get('name')
+		token=tokens.account_activation_token.make_token(tempUser)
+		newToken=Token()
+		newToken.token=token
+		newToken.save()
 		if (form.is_valid()):
-			message = render_to_string('instructorRegistration.html', {
+			message = render_to_string('instructorLink.html', {
 				'name': data.get('name'),
 				'domain': current_site.domain,
-				'uid':tempUser.pk,
-				'token':tokens.account_activation_token.make_token(tempUser),
+				# 'uid':tempUser.pk,
+				'token':token,
 			})
-			to_email = data.get('email')
 			email = EmailMessage(
-						mail_subject, message, to=[to_email]
+						mail_subject, message, to=[tempUser.tempMail]
 			)
 			email.send()
 			success=True
@@ -70,18 +74,134 @@ def inviteInstructor(request,**kwargs):
 	else:
 		raise SuspiciousOperation("Only admin can invite Instructor!")
 
-
 def registerInstructor(request,**kwargs):
-	print("hello")
+	token=kwargs['token']
+	tempUser=Instructor()
+	tempUser.tempName=kwargs['uidb64']
+	valid=tokens.account_activation_token.check_token(tempUser, token)
+	if (not valid) or Token.objects.filter(token=kwargs['token']).count()==0:
+		return HttpResponse("Invalid token!")
+
 	template=loader.get_template("registerInstructor.html")
 	form=registerInstructorForm()
-	context={'form':form}
+	context={'form':form,
+			 'token':token,
+			 'tempName':tempUser.tempName}
 	return HttpResponse(template.render(context,request))
 
 def createInstructorAccount(request,**kwargs):
 	if request.method=='POST':
 		form=registerInstructorForm(request.POST)
-		newInstructor=form.save(commit=False)
-		newInstructor.save()
+		data=request.POST.copy()
+		token=data.get('token')
+		tempUser=Instructor()
+		tempUser.tempName=data.get('tempName')
+		valid=tokens.account_activation_token.check_token(tempUser, token)
+		if (not valid) or Token.objects.filter(token=token).count()==0:
+			return HttpResponse("Invalid token!")
 
-	
+		if form.is_valid():
+			newInstructor=form.save(commit=False)
+			newInstructor.save()
+
+			tokenObject=Token.objects.filter(token=token)
+			tokenObject=tokenObject[0]
+			tokenObject.delete()
+		else:
+			return HttpResponse("Invalid user information!")
+	return redirect('/accounts/login/')
+
+def requestAccountLearner(request,**kwargs):
+	template=loader.get_template("requestAccountLearner.html")
+	form=requestAccountLearnerForm()
+	context={'form':form}
+	return HttpResponse(template.render(context,request))
+
+def sendLearnerLink(request,**kwargs):
+	if request.method=='POST':
+		form=requestAccountLearnerForm(request.POST)
+		data=request.POST.copy()
+		staffID=data.get('staffID')
+
+		#do checking with BANK SYSTEM
+		target_email,first_name,last_name=None,"",""
+		"info=BANK_SYSTEM_CHECK(staffID)"
+		"email=info['email'], first_name=info['first_name'],last_name=info[last_name']"
+		if staffID=='12345678':
+			target_email='liuchangon7@gmail.com'
+			first_name='chang'
+			last_name='liu'
+
+		#send email
+		newUser=Learner()
+		newUser.tempName=first_name+last_name
+		newUser.tempMail=target_email
+		current_site = get_current_site(request)
+		mail_subject = 'Register your learner account.'
+		token=tokens.account_activation_token.make_token(newUser)
+		newToken=Token()
+		newToken.token=token
+		newToken.save()
+		if target_email is not None:
+			message = render_to_string('learnerLink.html', {
+				'name': first_name+last_name,
+				'domain': current_site.domain,
+				'token':token,
+			})
+			email = EmailMessage(
+						mail_subject, message, to=[target_email]
+			)
+			email.send()
+			success=True
+		else:
+			success=False
+
+		#show result
+		template=loader.get_template("invitationResultLearner.html")
+		print_email=target_email
+		if print_email is not None and len(print_email)>3:
+			print_email=[print_email[i] if i<3 else '*' for i in range(len(print_email))]
+			print_email="".join(print_email)
+		context={
+			'name':first_name+last_name,
+			'email':print_email,
+			'res':success
+		}
+		return HttpResponse(template.render(context,request))
+
+def registerLearner(request,**kwargs):
+	token=kwargs['token']
+	tempUser=Learner()
+	tempUser.tempName=kwargs['uidb64']
+	valid=tokens.account_activation_token.check_token(tempUser, token)
+	if (not valid) or Token.objects.filter(token=kwargs['token']).count()==0:
+		return HttpResponse("Invalid token!")
+
+	template=loader.get_template("registerLearner.html")
+	form=registerLearnerForm()
+	context={'form':form,
+			 'token':token,
+			 'tempName':tempUser.tempName}
+	return HttpResponse(template.render(context,request))
+
+def createLearnerAccount(request,**kwargs):
+	if request.method=='POST':
+		form=registerLearnerForm(request.POST)
+		data=request.POST.copy()
+		token=data.get('token')
+		tempUser=Learner()
+		tempUser.tempName=data.get('tempName')
+		valid=tokens.account_activation_token.check_token(tempUser, token)
+		if (not valid) or Token.objects.filter(token=token).count()==0:
+			return HttpResponse("Invalid token!")
+
+		if form.is_valid():
+			newLearner=form.save(commit=False)
+			newLearner.save()
+
+			tokenObject=Token.objects.filter(token=token)
+			tokenObject=tokenObject[0]
+			tokenObject.delete()
+		else:
+			return HttpResponse("Invalid user information!")
+	return redirect('/accounts/login/')
