@@ -20,7 +20,10 @@
     	{% endfor %}
 		</ul>
 			<button id="create_module" data-uid="{{u_id}}" data-courseID="{{course.id}}">Add Module</button>
-			<form id="module_info"></form>
+			<div id="form_container">
+				<form id="module_info"></form>
+			</div>
+			<a href="/system/view/{{u_id}}/">Back to Courses</a>
 
 		{% else %}	<!-- user type is learner -->
 			{% if status == True %}

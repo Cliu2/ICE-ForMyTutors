@@ -248,7 +248,7 @@ def browseCourse(request, **kwargs):
 def viewCourseHistory(request, **kwargs):
 	template = loader.get_template('courseHistory.html')
 	enrolls = list({'course': e.course, 'finish_time': e.finish_time} for e
-    				in Enroll.objects.filter(learner__id=8, status=True))
+    				in Enroll.objects.filter(learner__id=kwargs['learner_id'], status=True))
 	context = {
 		'enrolls': enrolls,
 		'learner': Learner.objects.filter(id=kwargs['learner_id'])[0]

@@ -15,9 +15,23 @@ $(document).ready(function(){
       $("#module_info").attr("action", '/system/manage/'+i_id+'/'+c_id+'/add/');
       cm_exist = true;
     }
+    var form_container = document.getElementById("form_container");
+    var cancel_button = document.createElement("BUTTON");
+    cancel_button.innerHTML = 'cancel';
+    cancel_button.setAttribute('onclick', 'clearForm()');
+    cancel_button.setAttribute('id', 'cancelCreation');
+    form_container.appendChild(cancel_button);
   }
 
   var form = $("#module_info");
 
+  clearForm = function(){
+    // document.getElementById("module_info").innerHTML='';
+    // alert(document.getElementById("module_info").innerHTML);
+    document.getElementById("module_info").innerHTML = "";
+    $("#cancelCreation").remove();
+    cm_exist = false;
 
+
+  }
 })

@@ -113,6 +113,7 @@ def addModule(request, **kwargs):
 		order = 0
 	else:
 		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']+1
+	print('order is '+str(order))
 	module = Module(course=course, order=order, title=title)
 	module.save()
 	return redirect('/system/view/{}/{}/'.format(request.GET.get('i_id', None), course.id))
