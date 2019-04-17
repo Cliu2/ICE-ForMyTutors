@@ -130,7 +130,10 @@ def sendLearnerLink(request,**kwargs):
 			target_email='liuchangon7@gmail.com'
 			first_name='chang'
 			last_name='liu'
-
+		elif staffID=='123':
+			target_email = 'imon247@connect.hku.hk'
+			first_name = 'y'
+			last_name = 'li'
 		#send email
 		newUser=Learner()
 		newUser.tempName=first_name+last_name
