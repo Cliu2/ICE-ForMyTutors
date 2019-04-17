@@ -164,7 +164,7 @@ class Enroll(models.Model):
 
 	status = models.BooleanField(default=False)
 	progress = models.IntegerField(default=0)								# modules that visible to the learner
-	finish_time = models.DateField(default=None, null=True)
+	finish_time = models.DateField(default=None, blank=True, null=True)
 
 	def __str__(self):
 		return f'{self.learner} | {self.course.title}'
@@ -174,9 +174,10 @@ class Enroll(models.Model):
 			award CECU to a user, should be executed only once
 		"""
 		if self.finish_time==None:
-			learner.cummulative_CECU+=course.CECU_value
-			learner.save()
-			self.finish_time=datetime.date.today
+			self.status = True
+			self.learner.cummulative_CECU += self.course.CECU_value
+			self.learner.save()
+			self.finish_time=datetime.date.today()
 			self.save()
 
 	def setProgress(self,progress):

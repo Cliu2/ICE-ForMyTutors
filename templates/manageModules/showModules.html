@@ -23,15 +23,23 @@
 			<form id="module_info"></form>
 
 		{% else %}	<!-- user type is learner -->
+			{% if status == True %}
+			<p>
+				You have already finished this course!<br>
+				<b>Completion Time: </b> {{enroll.finish_time}}<br>
+				<b>CECU earned: </b>{{course.CECU_value}}<br>
+			</p>
+			{% endif %}
 			<ul>
 				{% for module in modules %}
 					{% if module.order <= progress %}
 						<li data-accessible="open"><a href="/system/view/{{u_id}}/{{course.id}}/{{module.id}}/">{{module}}</a></li>
 					{% else %}
-						<li data-accessible="close"><a href="/system/view/{{u_id}}/{{course.id}}/{{module.id}}/">{{module}}</a></li>
+						<li data-accessible="close">{{module}}</li>
 					{% endif %}
 				{% endfor %}
 			</ul>
+			<a href="/system/view/{{u_id}}/">back</a>
 		{% endif %}
 	</div>
 	{% endblock %}

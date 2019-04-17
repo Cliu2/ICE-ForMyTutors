@@ -61,22 +61,35 @@ def showModules(request, **kwargs):
 		type = 'learner'
 		course = Course.objects.filter(id=c_id)[0]
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
-		progress = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
-
+		enroll = Enroll.objects.filter(learner__id=u_id, course__id=c_id)[0]
+		# progress = Enroll.objects.filter(learner__id=u_id, course__id=c_id).values('progress')[0]['progress']
+		progress = enroll.progress
+		status = Enroll.objects.filter(learner__id=u_id, course__id=c_id)[0].status
+		context = {
+			'course': course,
+			'modules': modules,
+			'type': type,
+			'enroll': enroll,
+			'progress': progress,
+			'u_id': u_id,
+			'status': status,
+		}
 	else:
 		type = 'instructor'
 		course = Course.objects.filter(id=c_id)[0]
 		if course.instructor.pk!=u_id:
 			raise SuspiciousOperation("Course does not belong to current instructor!")
 		modules = Module.objects.filter(course__id=c_id).order_by('order')
-		progress = -1
-	context = {
-		'course': course,
-		'modules': modules,
-		'type': type,
-		'progress': progress,
-		'u_id': u_id,
-	}
+		# progress = -1
+		# status = False
+		context = {
+			'course': course,
+			'modules': modules,
+			'type': type,
+			# 'progress': progress,
+			'u_id': u_id,
+			# 'status': status,
+		}
 	return HttpResponse(template.render(context, request))
 
 
@@ -99,7 +112,7 @@ def addModule(request, **kwargs):
 	if len(Module.objects.filter(course__id=course.id))==0:
 		order = 0
 	else:
-		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']
+		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']+1
 	module = Module(course=course, order=order, title=title)
 	module.save()
 	return redirect('/system/view/{}/{}/'.format(request.GET.get('i_id', None), course.id))
