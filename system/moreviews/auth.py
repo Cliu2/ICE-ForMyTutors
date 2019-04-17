@@ -2,14 +2,9 @@ import sys
 sys.path.append("..")
 from django.shortcuts import render,redirect
 from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-from django.http import HttpResponse, JsonResponse
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text
+from django.http import HttpResponse
 from django.template import loader
 from django.template.loader import render_to_string
-from django.views.generic import TemplateView
-from django.views.generic.list import ListView
 from django.views import View
 from django.core.exceptions import SuspiciousOperation
 from django.core.mail import EmailMessage
@@ -41,6 +36,7 @@ def sendInstructorLink(request,**kwargs):
 		token=tokens.account_activation_token.make_token(tempUser)
 		newToken=Token()
 		newToken.token=token
+		newToken.email=tempUser.tempMail
 		newToken.save()
 		if (form.is_valid()):
 			message = render_to_string('instructorLink.html', {
@@ -81,12 +77,13 @@ def registerInstructor(request,**kwargs):
 	valid=tokens.account_activation_token.check_token(tempUser, token)
 	if (not valid) or Token.objects.filter(token=kwargs['token']).count()==0:
 		return HttpResponse("Invalid token!")
-
+	tokenObject=Token.objects.filter(token=kwargs['token'])[0]
 	template=loader.get_template("registerInstructor.html")
 	form=registerInstructorForm()
 	context={'form':form,
 			 'token':token,
-			 'tempName':tempUser.tempName}
+			 'tempName':tempUser.tempName,
+			 'email':tokenObject.email}
 	return HttpResponse(template.render(context,request))
 
 def createInstructorAccount(request,**kwargs):
@@ -94,6 +91,7 @@ def createInstructorAccount(request,**kwargs):
 		form=registerInstructorForm(request.POST)
 		data=request.POST.copy()
 		token=data.get('token')
+		email=data.get('email')
 		tempUser=Instructor()
 		tempUser.tempName=data.get('tempName')
 		valid=tokens.account_activation_token.check_token(tempUser, token)
@@ -102,6 +100,7 @@ def createInstructorAccount(request,**kwargs):
 
 		if form.is_valid():
 			newInstructor=form.save(commit=False)
+			newInstructor.email=email
 			newInstructor.save()
 
 			tokenObject=Token.objects.filter(token=token)
@@ -141,12 +140,15 @@ def sendLearnerLink(request,**kwargs):
 		token=tokens.account_activation_token.make_token(newUser)
 		newToken=Token()
 		newToken.token=token
+		newToken.email=target_email
 		newToken.save()
 		if target_email is not None:
 			message = render_to_string('learnerLink.html', {
 				'name': first_name+last_name,
 				'domain': current_site.domain,
 				'token':token,
+				'first_name':first_name,
+				'last_name':last_name
 			})
 			email = EmailMessage(
 						mail_subject, message, to=[target_email]
@@ -172,16 +174,21 @@ def sendLearnerLink(request,**kwargs):
 def registerLearner(request,**kwargs):
 	token=kwargs['token']
 	tempUser=Learner()
-	tempUser.tempName=kwargs['uidb64']
+	first_name=kwargs['first_name']
+	last_name=kwargs['last_name']
+	tempUser.tempName=first_name+last_name
 	valid=tokens.account_activation_token.check_token(tempUser, token)
-	if (not valid) or Token.objects.filter(token=kwargs['token']).count()==0:
+	if (not valid) or Token.objects.filter(token=token).count()==0:
 		return HttpResponse("Invalid token!")
-
+	tokenObject=Token.objects.filter(token=token)[0]
 	template=loader.get_template("registerLearner.html")
 	form=registerLearnerForm()
 	context={'form':form,
 			 'token':token,
-			 'tempName':tempUser.tempName}
+			 'tempName':tempUser.tempName,
+			 'email':tokenObject.email,
+			 'first_name':first_name,
+			 'last_name':last_name}
 	return HttpResponse(template.render(context,request))
 
 def createLearnerAccount(request,**kwargs):
@@ -189,6 +196,9 @@ def createLearnerAccount(request,**kwargs):
 		form=registerLearnerForm(request.POST)
 		data=request.POST.copy()
 		token=data.get('token')
+		email=data.get('email')
+		first_name=data.get('first_name')
+		last_name=data.get('last_name')
 		tempUser=Learner()
 		tempUser.tempName=data.get('tempName')
 		valid=tokens.account_activation_token.check_token(tempUser, token)
@@ -197,6 +207,9 @@ def createLearnerAccount(request,**kwargs):
 
 		if form.is_valid():
 			newLearner=form.save(commit=False)
+			newLearner.email=email
+			newLearner.first_name=first_name
+			newLearner.last_name=last_name
 			newLearner.save()
 
 			tokenObject=Token.objects.filter(token=token)

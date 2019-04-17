@@ -18,7 +18,7 @@ urlpatterns = [
     path('auth/createInstructorAccount/',auth.createInstructorAccount,name='createInstructorAccount'),
     path('auth/requestAccountLearner/',auth.requestAccountLearner,name='requestAccountLearner'),
     path('auth/sendLearnerLink/',auth.sendLearnerLink,name='sendLearnerLink'),
-    url(r'^activateLearner/(?P<uidb64>[0-9A-Za-z_\- ]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerLearner,name='registerLearner'),
+    url(r'^activateLearner/(?P<first_name>[0-9A-Za-z_\- ]+)/(?P<last_name>[0-9A-Za-z_\- ]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerLearner,name='registerLearner'),
     path('auth/createLearnerAccount/',auth.createLearnerAccount,name='createLearnerAccount'),
 
     # instructor editing mode
