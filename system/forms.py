@@ -19,20 +19,57 @@ class inviteInstructorForm(forms.Form):
 		cleaned_data = super().clean()
 		email=cleaned_data.get("email")
 		email_again=cleaned_data.get("email_again")
-		print(email_again,email)
 		if email_again!=email:
 			raise ValidationError("Email mismatch!",code='invalid')
 
 class registerInstructorForm(ModelForm):
-	# username=forms.CharField(label='account',max_length=200)
-	# password_again=forms.CharField(label='password',widget=forms.PasswordInput)
-	# password_again=forms.CharField(label='retype password',widget=forms.PasswordInput)
-	# firstname=forms.CharField(label='first name', max_length=100)
-	# lastname=forms.CharField(label='last name', max_length=100)
-	# autobiagraphy=forms.CharField(label='autobiagraphy',widget=forms.Textarea)
-
+	password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+	password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
 	class Meta:
 		model=Instructor
-		fields = ['username','password',
-			'first_name','last_name','autobiagraphy']
+		fields = ['username','first_name','last_name','autobiagraphy']
+
+	def clean_password2(self):
+		# Check that the two password entries match
+		password1 = self.cleaned_data.get("password1")
+		password2 = self.cleaned_data.get("password2")
+		if password1 and password2 and password1 != password2:
+			raise forms.ValidationError("Passwords don't match")
+		return password2
+
+	def save(self, commit=True):
+		# Save the provided password in hashed format
+		user = super().save(commit=False)
+		user.set_password(self.cleaned_data["password1"])
+		if commit:
+			user.save()
+		return user
+
+class requestAccountLearnerForm(forms.Form):
+	staffID=forms.CharField(label='staff ID',max_length=8)
+
+class registerLearnerForm(ModelForm):
+	password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+	password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+
+	class Meta:
+		model=Learner
+		fields = ['username']
+
+	def clean_password2(self):
+		# Check that the two password entries match
+		password1 = self.cleaned_data.get("password1")
+		password2 = self.cleaned_data.get("password2")
+		if password1 and password2 and password1 != password2:
+			raise forms.ValidationError("Passwords don't match")
+		return password2
+
+	def save(self, commit=True):
+		# Save the provided password in hashed format
+		user = super().save(commit=False)
+		user.set_password(self.cleaned_data["password1"])
+		if commit:
+			user.save()
+		return user
+

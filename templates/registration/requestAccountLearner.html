@@ -1,0 +1,8 @@
+{% block content %}
+  ICE system is for bank staff only. Please enter your staffID.
+	<form action="/system/auth/sendLearnerLink/" method="post">
+		{% csrf_token %}
+	    {{form}}
+	    <input type="submit" value="Send Link">
+	</form>
+{% endblock %}

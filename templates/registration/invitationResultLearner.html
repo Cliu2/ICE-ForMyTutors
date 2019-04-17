@@ -1,0 +1,9 @@
+{% block content %}
+{% if res %}
+	<p>Verification email has been successfully sent to {{email}}</p>
+	<p>Please login to your email and check the registartion link.</p>
+{% else%}
+	<p>Error! Staff ID not found!<p>
+{% endif %}
+<a href="/">back to login</a>
+{% endblock %}

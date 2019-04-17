@@ -12,7 +12,7 @@ class Instructor(User):
 
 class Learner(User):
 	staff_ID = models.CharField(max_length=8)
-	cummulative_CECU = models.IntegerField()
+	cummulative_CECU = models.IntegerField(default=0)
 
 	def __str__(self):
 		return f'{self.first_name} {self.last_name}'
@@ -182,3 +182,9 @@ class Enroll(models.Model):
 	def setProgress(self,progress):
 		self.progress=progress
 		self.save()
+
+class Token(models.Model):
+	token=models.CharField(max_length=100)
+
+	def __str__(self):
+		return f'{self.token}'

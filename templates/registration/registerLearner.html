@@ -1,6 +1,6 @@
 {% block content %}
-  Please register your account in ICE as an Instructor.
-	<form action="/system/auth/createInstructorAccount/" method="post">
+  Please register your account in ICE as an Learner.
+	<form action="/system/auth/createLearnerAccount/" method="post">
 	    {% csrf_token %}
 	    {{ form }}
 	    <input type="hidden" name="token" value="{{token}}">

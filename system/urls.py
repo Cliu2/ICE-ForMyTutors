@@ -13,9 +13,13 @@ urlpatterns = [
     #authentication related
     path('loadHome/',auth.loadHome,name='loadHome'),   # by LC, redirect users to their home after login
     path('auth/sendInstructorLink/',auth.sendInstructorLink,name='sendInstructorLink'),
-    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\- ]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerInstructor,name='registerInstructor'),
+    url(r'^activateInstructor/(?P<uidb64>[0-9A-Za-z_\- ]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerInstructor,name='registerInstructor'),
     path('auth/inviteInstructor/',auth.inviteInstructor,name='inviteInstructor'),
     path('auth/createInstructorAccount/',auth.createInstructorAccount,name='createInstructorAccount'),
+    path('auth/requestAccountLearner/',auth.requestAccountLearner,name='requestAccountLearner'),
+    path('auth/sendLearnerLink/',auth.sendLearnerLink,name='sendLearnerLink'),
+    url(r'^activateLearner/(?P<uidb64>[0-9A-Za-z_\- ]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',auth.registerLearner,name='registerLearner'),
+    path('auth/createLearnerAccount/',auth.createLearnerAccount,name='createLearnerAccount'),
 
     # instructor editing mode
     path('manage/<int:instructor_id>/addCourse/', views.createCourse, name='addCourse'),
