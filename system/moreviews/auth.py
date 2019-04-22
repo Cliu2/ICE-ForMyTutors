@@ -11,6 +11,9 @@ from django.core.mail import EmailMessage
 from ..forms import *
 from ..models import *
 from static import tokens
+import requests
+import json
+
 
 def loadHome(request,**kwargs):
 	user=request.user
@@ -118,23 +121,26 @@ def requestAccountLearner(request,**kwargs):
 
 def sendLearnerLink(request,**kwargs):
 	if request.method=='POST':
-		form=requestAccountLearnerForm(request.POST)
-		data=request.POST.copy()
+		form = requestAccountLearnerForm(request.POST)
+		data = request.POST.copy()
 		staffID=data.get('staffID')
-
-		#do checking with BANK SYSTEM
 		target_email,first_name,last_name=None,"",""
-		"info=BANK_SYSTEM_CHECK(staffID)"
-		"email=info['email'], first_name=info['first_name'],last_name=info[last_name']"
 		if staffID=='12345678':
 			target_email='liuchangon7@gmail.com'
 			first_name='chang'
 			last_name='liu'
-		elif staffID=='123':
-			target_email = 'imon247@connect.hku.hk'
-			first_name = 'y'
-			last_name = 'li'
-		#send email
+		else:
+			#do checking with BANK SYSTEM
+			checkUrl = "https://gibice-hrserver.herokuapp.com/info/" + staffID
+			response = requests.get(checkUrl)
+			try:
+				info = response.json()
+				target_email=info['email']
+				first_name=info['first_name']
+				last_name=info['last_name']
+			except json.JSONDecodeError:
+				success = False
+			#send email
 		newUser=Learner()
 		newUser.tempName=first_name+last_name
 		newUser.tempMail=target_email
