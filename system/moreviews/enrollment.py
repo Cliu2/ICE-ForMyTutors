@@ -14,9 +14,9 @@ import json
 
 def enrollInCourse(request, **kwargs):
     template = loader.get_template("enrollmentResult.html")
-    learner = Learner.objects.filter(id=kwargs['learner_id'])[0]
+    learner = Learner.objects.filter(id=request.user.id)[0]
     course = Course.objects.filter(id=kwargs['course_id'])[0]
-    is_enrolled = Enroll.objects.filter(course__id=kwargs['course_id'], learner__id=kwargs['learner_id'])
+    is_enrolled = Enroll.objects.filter(course__id=kwargs['course_id'], learner__id=request.user.id)
     if len(is_enrolled)>0:
         disabled = 'true'
     else:

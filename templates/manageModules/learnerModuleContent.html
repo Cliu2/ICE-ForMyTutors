@@ -1,3 +1,4 @@
+{% if user.is_authenticated %}
 <head>
 	<title>{{module.title}}</title>
 </head>
@@ -14,3 +15,9 @@
 	{% endif %}
 	<a href = "../" > back </a>
 </body>
+{% else %}
+<div>
+		You are not logged in!
+		<a href="/accounts/login/">Login</a>
+</div>
+{% endif %}

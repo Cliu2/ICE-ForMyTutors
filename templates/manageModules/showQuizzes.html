@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <!-- course, course_id, module, module_id, all_quizzes -->
+{% if user.is_authenticated %}
 <head>
   <title>All Available Quizzes</title>
 </head>
@@ -9,10 +10,16 @@
   {% for quiz in all_quizzes %}
     <li>
       <h4>{{quiz.title}}</h4><br>
-      <a href="/system/manage/{{instructor_id}}/{{course_id}}/{{module_id}}/addQuiz/{{quiz.id}}/">Add this quiz to current module</a>
+      <a href="/system/manage/{{course_id}}/{{module_id}}/addQuiz/{{quiz.id}}/">Add this quiz to current module</a>
 
     </li>
   {% endfor %}
-  <a href="/system/view/{{instructor_id}}/{{course_id}}/{{module_id}}/">Back</a>
+  <a href="/system/view/{{course_id}}/{{module_id}}/">Back</a>
 
 </body>
+{% else %}
+<div>
+  You are not logged in!<br>
+  <a href="/accounts/login/">Login</a>
+</div>
+{% endif %}

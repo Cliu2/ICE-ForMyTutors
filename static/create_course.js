@@ -17,7 +17,7 @@ $(document).ready(function(){
 
   $(btn).click(function(){
     i_id = $(btn).attr('data-instructorID');
-    var url = '/system/manage/'+i_id+'/addCourse/';
+    var url = '/system/manage/createCourse/';
 
     $("#form_container").remove();
 
@@ -29,7 +29,7 @@ $(document).ready(function(){
 
 
   function load_category(){
-    var url = '/system/manage/'+i_id+'/loadCategory/';
+    var url = '/system/manage/loadCategory/';
     $.ajax(url,
            {
              dataType: 'json',
@@ -49,7 +49,7 @@ $(document).ready(function(){
 
   function load_course_info(i_id, c_id){
     load_category();
-    var url = '/system/manage/'+i_id+'/loadCourseInfo/'+c_id+'/';
+    var url = '/system/manage/loadCourseInfo/'+c_id+'/';
     $.ajax(url,
           {
             dataType: 'json',
@@ -68,7 +68,7 @@ $(document).ready(function(){
     $("#form_container").remove();
     c_id = $(e.target).attr('data-courseID');
     i_id = $(e.target).attr('data-instructorID');
-    var url = '/system/manage/'+i_id+'/editCourse/'+c_id+'/';
+    var url = '/system/manage/editCourse/'+c_id+'/';
     var form = createForm(url);
     e.target.parentNode.appendChild(form);
     // load_category();

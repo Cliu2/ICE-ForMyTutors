@@ -9,21 +9,22 @@
 <body>
 	{% extends 'title.html' %}
 	{% block content %}
+	{% if user.is_authenticated %}
 	<div id="module_list">
 		{% if type == "instructor" %}
 		<ul>
     	{% for module in modules %}
-        <li><a href="/system/manage/{{u_id}}/{{course.id}}/{{module.id}}/displayModuleContent/">{{ module.title }}</a></li>
+        <li><a href="/system/manage/{{course.id}}/{{module.id}}/displayModuleContent/">{{ module.title }}</a></li>
 
-					<a href="/system/manage/{{u_id}}/{{course.id}}/{{module.id}}/deleteModule/"> remove </a>
+					<a href="/system/manage/{{course.id}}/{{module.id}}/deleteModule/"> remove </a>
 
     	{% endfor %}
 		</ul>
-			<button id="create_module" data-uid="{{u_id}}" data-courseID="{{course.id}}">Add Module</button>
+			<button id="create_module" data-uid="{{user.id}}" data-courseID="{{course.id}}">Add Module</button>
 			<div id="form_container">
 				<form id="module_info"></form>
 			</div>
-			<a href="/system/view/{{u_id}}/">Back to Courses</a>
+			<a href="/system/view/">Back to Courses</a>
 
 		{% else %}	<!-- user type is learner -->
 			{% if status == True %}
@@ -36,15 +37,21 @@
 			<ul>
 				{% for module in modules %}
 					{% if module.order <= progress %}
-						<li data-accessible="open"><a href="/system/view/{{u_id}}/{{course.id}}/{{module.id}}/">{{module}}</a></li>
+						<li data-accessible="open"><a href="/system/view/{{course.id}}/{{module.id}}/">{{module}}</a></li>
 					{% else %}
 						<li data-accessible="close">{{module}}</li>
 					{% endif %}
 				{% endfor %}
 			</ul>
-			<a href="/system/view/{{u_id}}/">back</a>
+			<a href="/system/view/">back</a>
 		{% endif %}
 	</div>
+	{% else %}
+		<div>
+			You are not logged in!<br>
+			<a href="/accounts/login/">login</a>
+		</div>
+	{% endif %}
 	{% endblock %}
 </body>
 </html>

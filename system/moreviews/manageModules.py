@@ -19,7 +19,7 @@ def checkCourseBelongToInstructor(course,instructor):
 def selectComponent(request,**kwargs):
 	course_id=kwargs['course_id']
 	module_id=kwargs['module_id']
-	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	instructor=Instructor.objects.get(id=request.user.id)
 	course=Course.objects.get(id=course_id)
 	checkCourseBelongToInstructor(course,instructor)
 	module=Module.objects.get(id=module_id)
@@ -36,7 +36,7 @@ def selectComponent(request,**kwargs):
 
 def addComponent(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])
-	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	instructor=Instructor.objects.get(id=request.user.id)
 	checkCourseBelongToInstructor(course,instructor)
 	module_id=kwargs['module_id']
 	component_id=kwargs['component_id']
@@ -51,9 +51,8 @@ def addComponent(request,**kwargs):
 	component.setOrder(index)
 	component.save()
 
-	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
-																		   kwargs['course_id'],
-																		   kwargs['module_id']))
+	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
+																		kwargs['module_id']))
 """
 def selectComponent(request, **kwargs):
 	course = Course.objects.get(id=kwargs['course_id'])
@@ -69,7 +68,7 @@ def displayModuleContent(request, **kwargs):
 	module_id=kwargs['module_id']
 	module=Module.objects.get(id=module_id)
 	course=Course.objects.get(id=kwargs['course_id'])
-	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	instructor=Instructor.objects.get(id=request.user.id)
 	checkCourseBelongToInstructor(course,instructor)
 	all_text_components=ComponentText.objects.filter(module__id=module_id)
 	all_image_components=ComponentImage.objects.filter(module__id=module_id)
@@ -98,7 +97,7 @@ def displayModuleContent(request, **kwargs):
 
 def saveOrder(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])
-	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	instructor=Instructor.objects.get(id=request.user.id)
 	checkCourseBelongToInstructor(course,instructor)
 	neworder=kwargs['neworder']
 	new_orders=neworder.split('-')
@@ -114,13 +113,12 @@ def saveOrder(request,**kwargs):
 		# print("new index:",indexToSet)
 		component.setOrder(indexToSet)
 
-	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
-																		   kwargs['course_id'],
-																		   kwargs['module_id']))
+	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
+																		kwargs['module_id']))
 
 def removeComponent(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])
-	instructor=Instructor.objects.get(id=kwargs['instructor_id'])
+	instructor=Instructor.objects.get(id=request.user.id)
 	checkCourseBelongToInstructor(course,instructor)
 
 	component=Component.objects.get(id=kwargs['component_id'])
@@ -136,6 +134,5 @@ def removeComponent(request,**kwargs):
 		c.save()
 		index+=1
 
-	return redirect('/system/manage/{}/{}/{}/displayModuleContent/'.format(kwargs['instructor_id'],
-																		   kwargs['course_id'],
-																		   kwargs['module_id']))
+	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
+																		kwargs['module_id']))

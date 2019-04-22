@@ -17,9 +17,9 @@
 	</style>
 
 </head>
-
 {% extends 'title.html' %}
 {% block content %}
+	{% if user.is_authenticated %}
 	{% if len_component > 0 %}
 	<ul id="container">
 		{% for component in components %}
@@ -30,7 +30,7 @@
 				{% elif component.isimage %}
 					<span>{{component.path}}</span>
 				{% endif %}
-				<a href="{% url 'removeComponentFromModule' instructor.pk course.pk module.pk component.pk %}">remove</a>
+				<a href="{% url 'removeComponentFromModule' course.pk module.pk component.pk %}">remove</a>
 			</li>
 		{% endfor %}
 	</ul>
@@ -39,18 +39,19 @@
 	{% endif %}
 	{% if len_quiz > 0 %}
 		<li>{{quiz}}
-			<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/{{quiz.id}}/removeQuiz/">Remove Quiz</a><br>
+			<a href="/system/manage/{{course.id}}/{{module.id}}/{{quiz.id}}/removeQuiz/">Remove Quiz</a><br>
 		</li>
 	{% else %}
 		<p>No quiz has been added to this module yet!</p>
-		<a href="/system/manage/{{instructor.id}}/{{course.id}}/{{module.id}}/selectQuiz/">Add a Quiz</a><br>
+		<a href="/system/manage/{{course.id}}/{{module.id}}/selectQuiz/">Add a Quiz</a><br>
 	{% endif %}
 
-<a href="{% url 'saveOrder' instructor.pk course.pk module.pk 'neworder' %}" hidden id="save"></a>
+<a href="{% url 'saveOrder' course.pk module.pk 'neworder' %}" hidden id="save"></a>
 
-<a href="{% url 'display_available_components' instructor.pk course.pk module.pk %}">Add a component</a><br>
+<a href="/system/manage/{{course.id}}/{{module.id}}/addComponent/">Add a component</a><br>
 
 <div id="available_components"></div>
 <button id="btn" onclick="neworder()">save order</button><br>
-<a href="{% url 'showModules' instructor.pk course.pk %}">Back</a>
+<a href="/system/view/{{course.id}}/">Back</a>
+{% endif %}
 {% endblock%}

@@ -17,9 +17,9 @@
   <div>
     <ul id="course_list" data-learnerID="{{learner.id}}">
       {% for course in course_list %}
-        <li class="course" data-category="{{course.category.name}}" data-v="{{course}}"><a href="/system/view/{{learner.id}}/browseCourse/detail/{{course.id}}/">{{course}}</a></li>
+        <li class="course" data-category="{{course.category.name}}" data-v="{{course}}"><a href="/system/view/browseCourse/detail/{{course.id}}/">{{course}}</a></li>
       {% endfor %}
     </ul>
   </div>
-  <a href="/system/view/{{learner.id}}/">Back</a>
+  <a href="/system/view/">Back</a>
 </body>

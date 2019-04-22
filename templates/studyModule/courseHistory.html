@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% if user.is_authenticated %}
 <head>
   <title>Course History for {{learner.first_name}}</title>
 </head>
@@ -11,6 +12,7 @@
       <b>CECU - </b>{{enroll.course.CECU_value}}
     </li>
   {% endfor %}
-  <a href="/system/view/{{learner.id}}/">Back to Courses</a>
+  <a href="/system/view/">Back to Courses</a>
   </ul>
 </body>
+{% endif %}

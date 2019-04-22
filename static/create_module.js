@@ -12,7 +12,7 @@ $(document).ready(function(){
       var p5 = '<input type="hidden" name="i_id" value='+i_id+'>';
       var p6 = '<input type="submit"></input>';
       $("#module_info").append(p2, p4, p5, p6);
-      $("#module_info").attr("action", '/system/manage/'+i_id+'/'+c_id+'/add/');
+      $("#module_info").attr("action", '/system/manage/'+c_id+'/createModule/');
       cm_exist = true;
     }
     var form_container = document.getElementById("form_container");

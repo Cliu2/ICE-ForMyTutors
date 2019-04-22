@@ -9,25 +9,32 @@
 </head>
 
 <body>
-	{% if type == "instructor" %}
-		<ul>
-		{% for course in course_list %}
-			<li>
-				<a href="/system/view/{{user.id}}/{{course.id}}/">{{course}}</a>
-				<button class="editCourse" data-courseID="{{course.id}}" data-instructorID="{{user.id}}">Edit</button>
-			</li>
-		{% endfor %}
-		</ul>
-		<button id="create_course" data-instructorID="{{user.id}}">Create Course</button>
-	{% else %}
-		<div id="l_courseList">
+	{% if user.is_authenticated %}
+		{% if type == "instructor" %}
 			<ul>
-				{% for course in course_list %}
-					<li><a href="/system/view/{{user.id}}/{{course.id}}/">{{course}}</a></li>
-				{% endfor %}
-			</ul><br><br>
-			<a href="/system/view/{{user.id}}/browseCourse/">Browse Course</a><br>
-			<a href="/system/view/{{user.id}}/viewCourseHistory/">View Course History</a>
+			{% for course in course_list %}
+				<li>
+					<a href="/system/view/{{course.id}}/">{{course}}</a>
+					<button class="editCourse" data-courseID="{{course.id}}" data-instructorID="{{user.id}}">Edit</button>
+				</li>
+			{% endfor %}
+			</ul>
+			<button id="create_course" data-instructorID="{{user.id}}">Create Course</button>
+		{% else %}
+			<div id="l_courseList">
+				<ul>
+					{% for course in course_list %}
+						<li><a href="/system/view/{{course.id}}/">{{course}}</a></li>
+					{% endfor %}
+				</ul><br><br>
+				<a href="/system/view/browseCourse/">Browse Course</a><br>
+				<a href="/system/view/viewCourseHistory/">View Course History</a>
+			</div>
+		{% endif %}
+	{% else %}
+		<div>
+			You are not logged in!<br>
+			<a href="/accounts/login/">login</a>
 		</div>
 	{% endif %}
 </body>

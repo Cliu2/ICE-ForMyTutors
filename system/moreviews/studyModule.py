@@ -79,7 +79,7 @@ def viewModule(request, **kwargs):
 	#
 	# 	components: a query component object in a certain module ordered by order attribute
 	#
-	u_id = kwargs['user_id']
+	u_id = request.user.id
 	c_id = kwargs['course_id']
 	m_id = kwargs['module_id']
 	template =loader.get_template("learnerModuleContent.html")
@@ -123,7 +123,7 @@ def RepresentsInt(s):
 def submitAnswer(request, **kwargs):
 	c_id = kwargs['course_id']
 	m_id = kwargs['module_id']
-	u_id = kwargs['user_id']
+	u_id = request.user.id
 	res = request.GET
 	template =loader.get_template("submitAnswer.html")
 	quiz = Quiz.objects.filter(module__id = m_id)[0]
@@ -237,21 +237,21 @@ def compOrder(request, **kwargs):
 
 def browseCourse(request, **kwargs):
 	template = loader.get_template('showAvailableCourses.html')
-	enrollments = Enroll.objects.filter(learner__id=kwargs['learner_id'])
+	enrollments = Enroll.objects.filter(learner__id=request.user.id)
 	open_courses = Course.objects.filter(status=0).order_by('title')
 	context = {
 		'course_list': open_courses,
-		'learner': Learner.objects.filter(id=kwargs['learner_id'])[0]
+		'learner': Learner.objects.filter(id=request.user.id)[0]
 	}
 	return HttpResponse(template.render(context, request))
 
 def viewCourseHistory(request, **kwargs):
 	template = loader.get_template('courseHistory.html')
 	enrolls = list({'course': e.course, 'finish_time': e.finish_time} for e
-    				in Enroll.objects.filter(learner__id=kwargs['learner_id'], status=True))
+    				in Enroll.objects.filter(learner__id=request.user.id, status=True))
 	context = {
 		'enrolls': enrolls,
-		'learner': Learner.objects.filter(id=kwargs['learner_id'])[0]
+		'learner': Learner.objects.filter(id=request.user.id)[0]
 	}
 	return HttpResponse(template.render(context, request))
 

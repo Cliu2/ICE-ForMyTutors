@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 
   function load_category(){
-    var url = '/system/view/'+l_id+'/loadCategoryForLearner/';
+    var url = '/system/view/loadCategoryForLearner/';
     $.ajax(
       url,
       {

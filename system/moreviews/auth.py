@@ -16,10 +16,10 @@ def loadHome(request,**kwargs):
 	user=request.user
 	if Instructor.objects.filter(pk=user.pk).exists():
 		# print("instructor!")
-		return redirect('/system/view/{}/'.format(user.pk))
+		return redirect('/system/view/')
 	elif Learner.objects.filter(pk=user.pk).exists():
 		# print("learner!")
-		return redirect('/system/view/{}/'.format(user.pk))
+		return redirect('/system/view/')
 	else:
 		# admin
 		return redirect('/system/auth/inviteInstructor/')
