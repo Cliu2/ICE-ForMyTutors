@@ -109,10 +109,21 @@ def ICourseList(request, **kwargs):
 def createModule(request, **kwargs):
 	title = request.GET.get('title', None)
 	course = Course.objects.filter(id=request.GET.get('c_id', None))[0]
+	order = request.GET.get('order', None)
 	if len(Module.objects.filter(course__id=course.id))==0:
 		order = 0
 	else:
-		order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']+1
+		largest_order = Module.objects.filter(course__id=course.id).order_by('-order').values('order')[0]['order']
+		if order=='-1' or int(order)>largest_order+1:
+			order = largest_order+1
+		else:
+			modules = Module.objects.filter(course__id=course.id)
+			for m in modules:
+				if m.order >= int(order):
+					m.order += 1
+					m.save()
+			order = int(order)
+
 	print('order is '+str(order))
 	module = Module(course=course, order=order, title=title)
 	module.save()
@@ -144,8 +155,13 @@ def editCourse(request, **kwargs):
 
 def deleteModule(request, **kwargs):
 	template = loader.get_template("showModules.html")
+	order = Module.objects.filter(id=kwargs['module_id'])[0].order
 	Module.objects.filter(id=kwargs['module_id']).delete()
 	modules = Module.objects.filter(course__id=kwargs['course_id']).order_by('order')
+	for m in modules:
+		if m.order>order:
+			m.order -= 1
+			m.save()
 	return redirect('/system/view/{}/'.format(kwargs['course_id']))
 
 def removeQuiz(request, **kwargs):

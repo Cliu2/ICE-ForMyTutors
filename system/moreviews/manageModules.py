@@ -33,7 +33,7 @@ def selectComponent(request,**kwargs):
 			 'instructor':instructor}
 	return HttpResponse(template.render(context,request))
 
-
+"""
 def addComponent(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])
 	instructor=Instructor.objects.get(id=request.user.id)
@@ -53,6 +53,34 @@ def addComponent(request,**kwargs):
 
 	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
 																		kwargs['module_id']))
+"""
+
+def addComponent(request, **kwargs):
+	title = request.GET.get('component_name', None)
+	order = request.GET.get('order', None)
+
+	if len(Component.objects.filter(module__id=kwargs['module_id']))==0:
+		order = 0
+	else:
+		largest_order = Component.objects.filter(module__id=kwargs['module_id']).order_by('-order').values('order')[0]['order']
+		if order=='' or int(order) > largest_order+1 or int(order)==-1:
+			order = largest_order+1
+		else:
+			components = Component.objects.filter(module__id=kwargs['module_id'])
+			for c in components:
+				if c.order >= int(order):
+					c.order += 1
+					c.save()
+			order = int(order)
+	component = Component.objects.filter(title=title, course__id=kwargs['course_id'])[0]
+	module = Module.objects.get(id=kwargs['module_id'])
+	component.module = module
+	component.order = order
+	component.save()
+
+	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
+																		kwargs['module_id']))
+
 """
 def selectComponent(request, **kwargs):
 	course = Course.objects.get(id=kwargs['course_id'])
@@ -115,6 +143,11 @@ def saveOrder(request,**kwargs):
 
 	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
 																		kwargs['module_id']))
+
+def loadComponents(request, **kwargs):
+	components = list(c.title for c in Component.objects.filter(course__id=kwargs['course_id'], module__isnull=True))
+	data = {'components': components}
+	return JsonResponse(data)
 
 def removeComponent(request,**kwargs):
 	course=Course.objects.get(id=kwargs['course_id'])

@@ -1,7 +1,7 @@
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="/static/Drag_Drop_Ordering.js"></script>
-	<script src="/static/addComponent.js"></script>
+	<script src="/static/add_component.js"></script>
 	<style type="text/css">
 		.drag {
 	        width: 100%;
@@ -30,7 +30,7 @@
 				{% elif component.isimage %}
 					<span>{{component.path}}</span>
 				{% endif %}
-				<a href="{% url 'removeComponentFromModule' course.pk module.pk component.pk %}">remove</a>
+				<a href="/system/manage/{{course.id}}/{{module.id}}/{{component.id}}/removeComponent/">remove</a>
 			</li>
 		{% endfor %}
 	</ul>
@@ -48,7 +48,10 @@
 
 <a href="{% url 'saveOrder' course.pk module.pk 'neworder' %}" hidden id="save"></a>
 
-<a href="/system/manage/{{course.id}}/{{module.id}}/addComponent/">Add a component</a><br>
+<!-- <a href="/system/manage/{{course.id}}/{{module.id}}/addComponent/">Add a component</a><br> -->
+<div id="componentContainer"></div>
+
+<button id="requestAddComponent" data-uid={{user.id}} data-cid={{course.id}} data-mid={{module.id}}>Add a Component</button>
 
 <div id="available_components"></div>
 <button id="btn" onclick="neworder()">save order</button><br>
