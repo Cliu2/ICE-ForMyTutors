@@ -45,6 +45,7 @@ urlpatterns = [
     # path('view/<int:user_id>/<int:course_id>/', views.viewCourse, name='viewCourse'),                           # view module list
     path('view/browseCourse/', studyModule.browseCourse, name='browseCourse'),
     path('view/enrollInCourse/<int:course_id>/', enrollment.enrollInCourse, name='enrollInCourse'),
+    path('view/dropCourse/<int:course_id>/', enrollment.dropCourse, name='dropCourse'),
     path('view/<int:course_id>/<int:module_id>/quiz/', studyModule.takeQuiz, name='takeQuiz'),        # learner takes quiz
     path('view/<int:course_id>/<int:module_id>/quiz/submitAnswer/', studyModule.submitAnswer, name='submitAnswer'),        # learner submits answer
 

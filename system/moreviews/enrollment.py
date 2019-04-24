@@ -15,7 +15,9 @@ import json
 def enrollInCourse(request, **kwargs):
     template = loader.get_template("enrollmentResult.html")
     learner = Learner.objects.filter(id=request.user.id)[0]
+    print(learner)
     course = Course.objects.filter(id=kwargs['course_id'])[0]
+    print(course)
     is_enrolled = Enroll.objects.filter(course__id=kwargs['course_id'], learner__id=request.user.id)
     if len(is_enrolled)>0:
         disabled = 'true'
@@ -34,3 +36,8 @@ def enrollInCourse(request, **kwargs):
         'disabled': disabled
     }
     return HttpResponse(template.render(context, request))
+
+def dropCourse(request, **kwargs):
+    en = Enroll.objects.get(course__id=kwargs['course_id'], learner__id=request.user.id)
+    en.delete()
+    return redirect('/system/view/')

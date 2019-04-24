@@ -32,7 +32,8 @@ def showCourses(request, **kwargs):
 		# user = Learner.objects.filter(id=user_id)[0]
 		course_list = list(enroll.course for enroll in Enroll.objects.filter(learner__id=user_id).order_by('status'))
 		status = list(enroll.status for enroll in Enroll.objects.filter(learner__id=user_id).order_by('status'))
-
+		for i in range(0, len(course_list)):
+			course_list[i].status = status[i]
 	else:
 		# user = users[0]
 		type = 'instructor'

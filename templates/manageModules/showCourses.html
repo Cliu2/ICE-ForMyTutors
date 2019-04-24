@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/static/stylesheets/style_show_c.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="/static/create_course.js"></script>
+	<script src="/static/drop_course.js"></script>
 
 </head>
 
@@ -24,7 +25,11 @@
 			<div id="l_courseList">
 				<ul>
 					{% for course in course_list %}
-						<li><a href="/system/view/{{course.id}}/">{{course}}</a></li>
+						<li><a href="/system/view/{{course.id}}/">{{course}}</a>
+							{% if course.status == False %}
+							<button id="drop" data-cid="{{course.id}}">Drop</button>
+							{% endif %}
+						</li>
 					{% endfor %}
 				</ul><br><br>
 				<a href="/system/view/browseCourse/">Browse Course</a><br>

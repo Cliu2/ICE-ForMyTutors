@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.template import loader
 from system.models import *
 from django.views.generic.list import ListView
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 
 # Create your views here.
 
@@ -143,6 +145,7 @@ def submitAnswer(request, **kwargs):
 			enroll.save()
 		if new_prog >= num_of_modules:
 			enroll.awardCECU()
+			sendPassEmail(request.user, enroll.course)
 
 	else:
 		passing = "fail"
@@ -248,12 +251,24 @@ def browseCourse(request, **kwargs):
 def viewCourseHistory(request, **kwargs):
 	template = loader.get_template('courseHistory.html')
 	enrolls = list({'course': e.course, 'finish_time': e.finish_time} for e
-    				in Enroll.objects.filter(learner__id=request.user.id, status=True))
+    				in Enroll.objects.filter(learner__id=request.user.id, status=True).order_by('finish_time'))
+	cummulative_CECU = sum(list(e.course.CECU_value for e in Enroll.objects.filter(learner_id=request.user.id, status=True)))
 	context = {
 		'enrolls': enrolls,
-		'learner': Learner.objects.filter(id=request.user.id)[0]
+		'learner': Learner.objects.filter(id=request.user.id)[0],
+		'cummulative_CECU': cummulative_CECU
 	}
 	return HttpResponse(template.render(context, request))
+
+def sendPassEmail(user, course):
+	mail_subject = 'Pass Course Notification'
+	message = render_to_string('passConfirmation.html', {
+								'name': user.username,
+								'course': course
+								})
+	email = EmailMessage(mail_subject, message, to=[user.email])
+	email.send()
+
 
 
 def manageModule(request, **kwargs):
