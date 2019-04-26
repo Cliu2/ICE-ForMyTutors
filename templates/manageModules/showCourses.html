@@ -16,7 +16,9 @@
 			{% for course in course_list %}
 				<li>
 					<a href="/system/view/{{course.id}}/">{{course}}</a>
+					{% if course.status != 0 %}
 					<button class="editCourse" data-courseID="{{course.id}}" data-instructorID="{{user.id}}">Edit</button>
+					{% endif %}
 				</li>
 			{% endfor %}
 			</ul>
