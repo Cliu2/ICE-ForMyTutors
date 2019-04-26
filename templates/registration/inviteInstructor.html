@@ -1,4 +1,5 @@
 {% block content %}
+<link rel="stylesheet" href="/static/stylesheets/style_show_c.css">
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
 <form action="/system/auth/sendInstructorLink/" method="post">

@@ -1,4 +1,5 @@
 {% block content %}
+<link rel="stylesheet" href="/static/stylesheets/style_show_c.css">
 {% if user.is_authenticated %}
 	<ul>
     <div class="row">
@@ -9,19 +10,19 @@
             <!-- END OF REQUIRED QUESTION -->
             <!-- CHOICES -->
                 <label for="choice-1">
-                    <input type="radio" id="choice-1" name={{ question.pk }} value="A" />&nbsp;{{ question.option_1 }}<br/>
+                    <input type="radio" name={{ question.pk }} value="A" />&nbsp;{{ question.option_1 }}<br/>
                 </label>
                 <label for="choice-2">
-                    <input type="radio" id="choice-2" name={{ question.pk }} value="B" />&nbsp;{{ question.option_2 }}<br/>
+                    <input type="radio" name={{ question.pk }} value="B" />&nbsp;{{ question.option_2 }}<br/>
                 </label>
                 <label for="choice-3">
-                    <input type="radio" id="choice-3" name={{ question.pk }} value="C" />&nbsp;{{ question.option_3 }}<br/>
+                    <input type="radio"  name={{ question.pk }} value="C" />&nbsp;{{ question.option_3 }}<br/>
                 </label>
                 <label for="choice-4">
-                    <input type="radio" id="choice-4" name={{ question.pk }} value="D" />&nbsp;{{ question.option_4 }}<br/>
+                    <input type="radio"  name={{ question.pk }} value="D" />&nbsp;{{ question.option_4 }}<br/>
                 </label>
                 <label for="answer">
-                    <input type="hidden" id="answer" name="q{{ question.pk }}"" value={{ question.answer }} />
+                    <input type="hidden"  name="q{{ question.pk }}"" value={{ question.answer }} />
                 </label>
             {% endfor %}
             <input type="submit" class="blue button" value="Send" />
