@@ -27,14 +27,13 @@ $(document).ready(function(){
   });
 
 
-
-  function load_category(){
+  function load_category(callback){
     var url = '/system/manage/loadCategory/';
     $.ajax(url,
            {
              dataType: 'json',
              success: function(data, status){
-               categories = data.categories;
+               var categories = data.categories;
                for(var i=0;i<categories.length;i++){
                  var c = document.createElement("OPTION");
                  c.innerHTML = categories[i];
@@ -42,13 +41,13 @@ $(document).ready(function(){
                }
                set_input_category();
                set_input_CECU();
+               callback(categories);
              }
            }
     );
   }
 
   function load_course_info(i_id, c_id){
-    load_category();
     var url = '/system/manage/loadCourseInfo/'+c_id+'/';
     $.ajax(url,
           {
@@ -59,7 +58,18 @@ $(document).ready(function(){
               $("#input_category").attr('value', data.category);
               $("#input_CECU").attr('value', data.CECU);
               $("#select_category").attr('value', data.category);
+              load_category(function(categories){
+                for(var i=0;i<categories.length;i++){
+                  if (categories[i]===data.category){
+                    $("#select_category")[0].selectedIndex=i;
+                  }
+                }
+              });
+
               $("#select_CECU").attr('value', data.CECU);
+              if(data.CECU===4){
+                $("#select_CECU")[0].selectedIndex=1
+              }
             }
           });
   }
@@ -90,11 +100,13 @@ $(document).ready(function(){
     input_title.setAttribute('id', 'c_title');
     input_title.setAttribute('type', 'text');
     input_title.setAttribute('name', 'title');
+    input_title.placeholder="Course title";
 
     var input_des = document.createElement("INPUT");
     input_des.setAttribute('id', 'c_des');
     input_des.setAttribute('type', 'text');
     input_des.setAttribute('name', 'description');
+    input_des.placeholder="Course description";
 
     var input_category = document.createElement("INPUT");
     input_category.setAttribute('id', 'input_category');
@@ -132,9 +144,17 @@ $(document).ready(function(){
 
     form.appendChild(input_title);
     form.appendChild(input_des);
+    var lable=document.createElement("P");
+    lable.setAttribute('style','font-size:12px;display:inline;margin-left:22px;color:green');
+    lable.innerText="Category";
+    form.appendChild(lable)
     form.appendChild(input_category);
     form.appendChild(input_CECU);
     form.appendChild(select_category);
+    var lable=document.createElement("P");
+    lable.setAttribute('style','font-size:12px;display:inline;margin-left:22px;color:green');
+    lable.innerText="CECU";
+    form.appendChild(lable);
     form.appendChild(select_CECU);
     form.append(submit_button);
 
