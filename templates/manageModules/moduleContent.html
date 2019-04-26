@@ -27,7 +27,9 @@
 	{% endif %}
 	{% if len_quiz > 0 %}
 		<li>{{quiz}}
+			{% if course.status != 0 %}
 			<a href="/system/manage/{{course.id}}/{{module.id}}/{{quiz.id}}/removeQuiz/">Remove Quiz</a><br>
+			{% endif %}
 		</li>
 	{% else %}
 		<p>No quiz has been added to this module yet!</p>

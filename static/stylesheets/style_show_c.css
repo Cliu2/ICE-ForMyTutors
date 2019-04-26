@@ -41,7 +41,8 @@ button,[type="submit"] {
   
   /* Active state animation applied here */
   button:active {
-    -webkit-animation: active 1200ms ease 1
+    -webkit-animation: active 1200ms ease 1;
+    animation: active 1200ms ease 1;
   }
 
  
