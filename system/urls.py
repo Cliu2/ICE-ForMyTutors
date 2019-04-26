@@ -35,6 +35,7 @@ urlpatterns = [
     path('manage/<int:course_id>/<int:module_id>/loadComponents/', manageModules.loadComponents, name='loadComponents'),
     path('manage/<int:course_id>/<int:module_id>/displayModuleContent/',manageModules.displayModuleContent,name='displayModuleContent'),
     path('manage/<int:course_id>/<int:module_id>/saveOrder/<slug:neworder>/',manageModules.saveOrder,name='saveOrder'),
+    path('manage/<int:course_id>/saveModuleOrder/<slug:neworder>/',manageModules.saveModuleOrder,name='saveModuleOrder'),
     path('manage/<int:course_id>/<int:module_id>/<int:component_id>/removeComponent/',manageModules.removeComponent,name='removeComponentFromModule'),
 
     path('manage/loadCourseInfo/<int:course_id>/', moreviews.loadCourseInfo, name='loadCourseInfo'),

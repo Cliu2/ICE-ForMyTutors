@@ -3,7 +3,21 @@
 <head>
 		<title>Course Content</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="/static/Drag_Drop_Ordering.js"></script>
 		<script src="/static/create_module.js"></script>
+		<style type="text/css">
+			.drag {
+				width: 100%;
+				height: 40px;
+				border: 1px solid #999;
+				background: #EA6E59;
+				margin-top: 2px;
+				border-radius: 10px;
+				padding-left: 10px;
+				color: white;
+				cursor: move;
+			}
+		</style>
 </head>
 
 <body>
@@ -12,14 +26,16 @@
 	{% if user.is_authenticated %}
 	<div id="module_list">
 		{% if type == "instructor" %}
-		<ul>
+		<ul id="container">
     	{% for module in modules %}
-        <li><a href="/system/manage/{{course.id}}/{{module.id}}/displayModuleContent/">{{ module.title }}</a></li>
-
-					<a href="/system/manage/{{course.id}}/{{module.id}}/deleteModule/"> remove </a>
-
+        <li draggable="true" class="drag" id="{{module.pk}}">
+			<a draggable="false" href="/system/manage/{{course.id}}/{{module.id}}/displayModuleContent/">{{ module.title }}</a>
+			<a draggable="false" href="/system/manage/{{course.id}}/{{module.id}}/deleteModule/"> remove </a>
+		</li>
     	{% endfor %}
 		</ul>
+		<a href="{% url 'saveModuleOrder' course.pk 'neworder' %}" hidden id="save"></a>
+		<button id="btn" onclick="neworder()">save order</button><br>
 			<button id="create_module" data-uid="{{user.id}}" data-courseID="{{course.id}}">Add Module</button>
 			<div id="form_container">
 				<form id="module_info"></form>

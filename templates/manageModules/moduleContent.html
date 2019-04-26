@@ -30,7 +30,7 @@
 				{% elif component.isimage %}
 					<span>{{component.path}}</span>
 				{% endif %}
-				<a href="/system/manage/{{course.id}}/{{module.id}}/{{component.id}}/removeComponent/">remove</a>
+				<a draggable="false" href="/system/manage/{{course.id}}/{{module.id}}/{{component.id}}/removeComponent/">remove</a>
 			</li>
 		{% endfor %}
 	</ul>

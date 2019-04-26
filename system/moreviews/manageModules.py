@@ -141,8 +141,27 @@ def saveOrder(request,**kwargs):
 		# print("new index:",indexToSet)
 		component.setOrder(indexToSet)
 
-	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],
-																		kwargs['module_id']))
+	return redirect('/system/manage/{}/{}/displayModuleContent/'.format(kwargs['course_id'],kwargs['module_id']))
+
+
+def saveModuleOrder(request,**kwargs):
+	course=Course.objects.get(id=kwargs['course_id'])
+	instructor=Instructor.objects.get(id=request.user.id)
+	checkCourseBelongToInstructor(course,instructor)
+	neworder=kwargs['neworder']
+	new_orders=neworder.split('-')
+	new_orders=[int(x) for x in new_orders]
+	modules=Module.objects.filter(course__id=kwargs['course_id'])
+	all_modules=[None for i in range(len(modules))]
+	for m in modules:
+		all_modules[m.order]=m
+	for i in range(len(all_modules)):
+		module=all_modules[i]
+		indexToSet=new_orders.index(module.pk)
+		# print(component)
+		# print("new index:",indexToSet)
+		module.setOrder(indexToSet)
+	return redirect('/system/view/{}/'.format(kwargs['course_id']))											
 
 def loadComponents(request, **kwargs):
 	components = list(c.title for c in Component.objects.filter(course__id=kwargs['course_id'], module__isnull=True))
