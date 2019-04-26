@@ -1,0 +1,15 @@
+.drag {
+    width: 50%;
+    height: 40px;
+    border: 1px solid #999;
+    background: #EA6E59;
+    margin-top: 2px;
+    border-radius: 10px;
+    padding-left: 10px;
+    color: white;
+    cursor: move;
+}
+
+img[src=""]{
+    display: none;
+}

@@ -1,13 +1,17 @@
 {% if user.is_authenticated %}
 <head>
 	<title>{{module.title}}</title>
+	<link rel="stylesheet" href="/static/stylesheets/style_show_c.css">
 </head>
 
 <body>
 	<h1>{{ module.title }}</h1>
-	<ul>
-	    {% for component in components %}
-	       <li>{{ component }}</li>
+	<ul style="list-style: none;">
+		{% for component in components %}
+		<li>
+		<span>{{component.content}}</span>
+		<span><img draggable="false" src={{component.path}}></span>
+		</li>
 			{% endfor %}
 	</ul><br>
 	{% if progress == module.order %}

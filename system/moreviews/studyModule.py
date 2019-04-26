@@ -87,8 +87,15 @@ def viewModule(request, **kwargs):
 	template =loader.get_template("learnerModuleContent.html")
 	module = Module.objects.filter(id= m_id)[0]
 	users = Instructor.objects.filter(id=u_id)
-	components = Component.objects.filter(module__id=m_id).order_by('order')
-	componentURL = components
+	all_text_components=ComponentText.objects.filter(module__id=m_id)
+	all_image_components=ComponentImage.objects.filter(module__id=m_id)
+	all_components=[None for i in range(len(all_text_components)+len(all_image_components))]
+	for t in all_text_components:
+		t.istext=True
+		all_components[t.order]=t
+	for i in all_image_components:
+		i.isimage=True
+		all_components[i.order]=i
 	if len(users) == 0:
 		type = 'learner'
 		progress = Enroll.objects.filter(learner_id=u_id, course_id=c_id).values('progress')[0]['progress']
@@ -97,7 +104,7 @@ def viewModule(request, **kwargs):
 		progress = -1
 	context = {
 		'type': type,
-		'components': components,
+		'components': all_components,
 		'module': module,
 		'progress': progress,
 	}

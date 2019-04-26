@@ -2,19 +2,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="/static/Drag_Drop_Ordering.js"></script>
 	<script src="/static/add_component.js"></script>
-	<style type="text/css">
-		.drag {
-	        width: 100%;
-	        height: 40px;
-	        border: 1px solid #999;
-	        background: #EA6E59;
-	        margin-top: 2px;
-	        border-radius: 10px;
-	        padding-left: 10px;
-	        color: white;
-	        cursor: move;
-	    }
-	</style>
+	<link rel="stylesheet" href="/static/stylesheets/style_show_c.css">
 
 </head>
 {% extends 'title.html' %}
@@ -25,13 +13,13 @@
 		{% for component in components %}
 			<li draggable="true" class="drag" id="{{component.pk}}">
 				<span>{{component.title}}:</span>
-				{% if component.istext %}
-					<span>{{component.content}}</span>
-				{% elif component.isimage %}
-					<span>{{component.path}}</span>
-				{% endif %}
+				<span draggable="false">{{component.content}}</span>
+				<span draggable="false"><img style="height:30px;width:30px" draggable="false" src={{component.path}}></span>
 				<a draggable="false" href="/system/manage/{{course.id}}/{{module.id}}/{{component.id}}/removeComponent/">remove</a>
 			</li>
+			<!--<li draggable="true" class="drag">
+				<img style="height:30px;width:30px" draggable="false" src="https://yt3.ggpht.com/a-/AAuE7mDaIPSwLi2eUtSdUZ0Knhmpfg6vTCe09VKiLw=s900-mo-c-c0xffffffff-rj-k-no">
+			</li> -->
 		{% endfor %}
 	</ul>
 	{% else %}
