@@ -68,8 +68,11 @@ $(document).ready(function(){
               });
 
               $("#select_CECU").attr('value', data.CECU);
-              if(data.CECU===4){
-                $("#select_CECU")[0].selectedIndex=1
+              for(var i=0;i<6;i++){
+                if(data.CECU==i){
+                  $("#select_CECU")[0].selectedIndex=i;
+                  $("#select_CECU")[0].value=i
+                }
               }
             }
           });
@@ -129,8 +132,20 @@ $(document).ready(function(){
     CECU_2.innerHTML = '2';
     var CECU_4 = document.createElement("OPTION");
     CECU_4.innerHTML = '4';
+    var CECU_1 = document.createElement("OPTION");
+    CECU_1.innerHTML = '1';
+    var CECU_3 = document.createElement("OPTION");
+    CECU_3.innerHTML = '3';
+    var CECU_5 = document.createElement("OPTION");
+    CECU_5.innerHTML = '5';
+    var CECU_6 = document.createElement("OPTION");
+    CECU_6.innerHTML = '6';
+    select_CECU.appendChild(CECU_1);
     select_CECU.appendChild(CECU_2);
+    select_CECU.appendChild(CECU_3);
     select_CECU.appendChild(CECU_4);
+    select_CECU.appendChild(CECU_5);
+    select_CECU.appendChild(CECU_6);
 
     select_category.setAttribute('onchange', 'set_input_category();');
     select_CECU.setAttribute('onchange', 'set_input_CECU()');
