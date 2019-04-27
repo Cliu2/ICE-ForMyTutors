@@ -137,4 +137,4 @@ EMAIL_HOST_USER='iceformytutors@gmail.com'
 EMAIL_HOST_PASSWORD='COMP3297'
 EMAIL_PORT=587
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

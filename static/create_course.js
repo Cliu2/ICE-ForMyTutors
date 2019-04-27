@@ -62,6 +62,7 @@ $(document).ready(function(){
                 for(var i=0;i<categories.length;i++){
                   if (categories[i]===data.category){
                     $("#select_category")[0].selectedIndex=i;
+                    $("#select_category")[0].value=data.category;
                   }
                 }
               });
